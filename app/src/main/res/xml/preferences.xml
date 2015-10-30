@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferencescreen" >
+    <PreferenceCategory
+        android:key="firstcategory"
+        android:title="@string/pref_header_general" >
+        <ListPreference
+            android:defaultValue="3"
+            android:entries="@array/pref_list_radarkreise_items_texte"
+            android:entryValues="@array/pref_list_radarkreise_items"
+            android:key="@string/prefs_titel_preference_radarkreise"
+            android:summary="@string/pref_radarbild_einstellungen_summary"
+            android:title="@string/pref_radarbild_einstellungen_title" />
+        <ListPreference
+            android:defaultValue="northup"
+            android:entries="@array/pref_list_radarorientierung_items_text"
+            android:entryValues="@array/pref_list_radarorientierung_items"
+            android:key="@string/prefs_titel_preference_orientierung"
+            android:summary="@string/pref_radarbild_orientierung_summary"
+            android:title="@string/pref_radarbild_orientierung_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="second_category"
+        android:title="@string/prefs_titel_preference_second_category" >
+        <Preference
+            android:key="about"
+            android:title="@string/prefs_titel_preference_second_category_about" />
+        <Preference
+            android:key="debugmode"
+            android:title="@string/prefs_titel_preference_second_category_debugmode" />
+    </PreferenceCategory>
+</PreferenceScreen>

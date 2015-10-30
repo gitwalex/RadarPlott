@@ -1,0 +1,41 @@
+<resources>
+    <!-- Ueberschrift -->
+    <string name="title_activity_help">Einstellungen und Informationen</string>
+    <!-- Radareinstellungen -->
+    <string name="pref_header_general">Radar-Einstellungen</string>
+    <!--  1. Einstellungen Seemeilen -->
+    <string name="pref_radarbild_einstellungen_title">Entfernungsbereich in Seemeilen</string>
+    <string name="pref_radarbild_einstellungen_summary">Skaliert das Radarbild auf den festgelegten Bereich</string>
+    <string name="prefs_titel_preference_radarkreise">radarkreise</string>
+    <string-array name="pref_list_radarkreise_items">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>6</item>
+        <item>9</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="pref_list_radarkreise_items_texte">
+        <item>1 Seemeile</item>
+        <item>2 Seemeilen</item>
+        <item>3 Seemeilen</item>
+        <item>6 Seemeilen</item>
+        <item>9 Seemeilen</item>
+        <item>12 Seemeilen</item>
+    </string-array>
+    <!--  2. Einstellungen Radar-rientierungrientierungOrientierung -->
+    <string name="pref_radarbild_orientierung_title">Radarorientierung</string>
+    <string name="pref_radarbild_orientierung_summary">Orientierung NorthUp oder HeadUp</string>
+    <string name="prefs_titel_preference_orientierung">orientierung</string>
+    <string-array name="pref_list_radarorientierung_items">
+        <item>northup</item>
+        <item>headup</item>
+        </string-array>
+    <string-array name="pref_list_radarorientierung_items_text">
+        <item>NortUp</item>
+        <item>HeadUp</item>
+        </string-array>
+    <string name="prefs_titel_preference_second_category">Allgemeines</string>
+    <string name="prefs_titel_preference_second_category_about">About</string>
+    <string name="prefs_titel_preference_second_category_debugmode">Debug-Modus</string>
+</resources>

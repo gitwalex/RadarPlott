@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RadarPlott</string>
+    <!-- Texte Eingabe -->
+    <string name="Input">Eingabe der Werte</string>
+    <string name="eigSchiff">Eigenes Schiff</string>
+    <string name="eigKurs">Kurs (rw)</string>
+    <string name="eigFahrt">Fahrt (kn)</string>
+    <string name="Peilung1B">1. Seitenpeilung B</string>
+    <string name="Peilung2B">2. Seitenpeilung B</string>
+    <string name="SP">Seitenpeilung</string>
+    <string name="RSP">Radarseitenpeilung</string>
+    <string name="Distanz">Distanz</string>
+    <string name="Intervall">Intervall</string>
+    <string name="HeadUp">Head-Up</string>
+    <string name="NorthUp">North-Up</string>
+    <string name="eingabefehler">Maximaler Wert fuer dieses Feld: </string>
+    <string name="anliegenderkurs">anliegender Kurs</string>
+    <string name="Ausrichtung">Ausrichtung des Radars</string>
+    <string name="bWeiter">Weiter</string>
+    <string name="bClear">Clear</string>
+    <!-- Texte Ergebnis -->
+    <string name="Lage">Lage nach Eingabe</string>
+    <string name="RelWerte">Relative Werte von B</string>
+    <string name="KBr">Relativer Kurs B</string>
+    <string name="vBr">Relative Geschwindigkeit B</string>
+    <string name="AbsWerte">Wahre Werte B</string>
+    <string name="KB">Rechtweisender Kurs B</string>
+    <string name="vB">Wahre Geschwindigkeit B</string>
+    <string name="TimeAndDist">Abstände und Dauer</string>
+    <string name="CPA">Kleinste Annährung (CPA)</string>
+    <string name="PCPA">Radarkreiselpeilung CPA (PCPA)</string>
+    <string name="SCPA">Seitenpeilung CPA (SPCPA)</string>
+    <string name="TCPA">Dauer bis CPA (TCPA)</string>
+    <string name="BCR">Abstand auf Kurslinie (BCR)</string>
+    <string name="BCT">Passieren der Kurslinie in (BCT)</string>
+    <!-- Texte Manoever -->
+    <string name="nLage">Lage nach Manoever</string>
+    <string name="nECPA">Entfernung zum CPA</string>
+    <string name="nRelWerte">Werte von B nach Manöver</string>
+    <string name="delta">Delta</string>
+    <string name="nRASP">Radarseitenpeilung</string>
+    <string name="nTimeAndDist">Abstände und Dauer nach Manöver</string>
+    <string name="nEBC">Entfernung zur Kurslinie</string>
+    <!-- Allgemeine Bezeichnungen -->
+    <string name="na">n/a</string>
+    <string name="angle">deg</string>
+    <string name="speed">kn</string>
+    <string name="minutes">min</string>
+    <string name="sm">sm</string>
+    <!-- Weitere Texte -->
+    <string name="menu_settings">Settings</string>
+    <string name="helptitel">Intension und Hilfe zu Radarplott</string>
+    <string name="usetitel">Wie liest und benutzt man dieses Ergebnis</string>
+    <string name="checkboxstart">Beim Start nicht mehr zeigen</string>
+    <!-- Werte des Menues -->
+    <string name="settings">Einstellungen</string>
+    <string name="bedienung">Hilfe</string>
+    <string name="about">About </string>
+    <!-- Strings fuer Tabs -->
+    <string name="tabGegnerB">Gegner B</string>
+    <string name="tabGegnerC">Gegner C</string>
+    <string name="tabGegnerD">Gegner D</string>
+    <string name="tabRadarBild">Grafik</string>
+    <string name="tabSpinner">Manöver</string>
+</resources>

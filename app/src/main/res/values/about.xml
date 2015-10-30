@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="abouttext">
+<![CDATA[
+Radarplott
+<br><br>
+&copy by Alexander Winkler
+<br><br>
+Version 0.9, created December 2012
+<br><br>
+Das Logo des Bildes wurde von Wikipedia:Commons 
+exportiert und steht unter Lizenz<br> 
+http://creativecommons.org/licenses/by-sa/3.0/deed.en
+<br><br>
+Vielen Dank an Clipper<br> (http://commons.wikimedia.org/wiki/User:Clipper).
+<br>
+ ]]>
+    </string>
+</resources>

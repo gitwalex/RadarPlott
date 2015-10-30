@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_launcher_settings"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settings">
+    </item>
+    <item
+        android:id="@+id/beschreibung"
+        android:icon="@drawable/ic_menu_help"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/bedienung">
+    </item>
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_menu_info_details"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/about">
+    </item>
+</menu>

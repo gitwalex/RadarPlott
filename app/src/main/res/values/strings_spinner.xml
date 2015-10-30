@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="manoeverart_prompt">Manöver</string>
+    <string-array name="manoever_arrays">
+        <item>Kursänderung</item>
+        <item>Fahrtänderung</item>
+    </string-array>
+</resources>

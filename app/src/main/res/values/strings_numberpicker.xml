@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_minus">-</string>
+    <string name="btn_plus">+</string>
+    <string name="tvDescription">Text</string>
+    <!--  Inhalte der Numberpickertexte bei Anzeige -->
+    <string name="npKurs">Kurs A: </string>
+    <string name="npZeitPunkt">Zeitpunkt: </string>
+    <string name="npAbstand">Abstand: </string>
+    <string name="npCPA">CPA: </string>
+    <string name="npFahrt">Fahrt: </string>
+</resources>

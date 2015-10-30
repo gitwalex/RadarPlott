@@ -1,0 +1,261 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* Hilfetext.html
+* RadarPlott.iml
+* Uebersicht der Bestandteile
+* arrays.xml
+* doc\
+* doc\allclasses-frame.html
+* doc\allclasses-noframe.html
+* doc\constant-values.html
+* doc\de\
+* doc\de\alexanderwinkler\
+* doc\de\alexanderwinkler\BuildConfig.html
+* doc\de\alexanderwinkler\Math\
+* doc\de\alexanderwinkler\Math\Gerade2D.html
+* doc\de\alexanderwinkler\Math\Kreis2D.html
+* doc\de\alexanderwinkler\Math\Punkt2D.html
+* doc\de\alexanderwinkler\Math\Vektor2D.html
+* doc\de\alexanderwinkler\Math\class-use\
+* doc\de\alexanderwinkler\Math\class-use\Gerade2D.html
+* doc\de\alexanderwinkler\Math\class-use\Kreis2D.html
+* doc\de\alexanderwinkler\Math\class-use\Punkt2D.html
+* doc\de\alexanderwinkler\Math\class-use\Vektor2D.html
+* doc\de\alexanderwinkler\Math\package-frame.html
+* doc\de\alexanderwinkler\Math\package-summary.html
+* doc\de\alexanderwinkler\Math\package-tree.html
+* doc\de\alexanderwinkler\Math\package-use.html
+* doc\de\alexanderwinkler\R.anim.html
+* doc\de\alexanderwinkler\R.array.html
+* doc\de\alexanderwinkler\R.attr.html
+* doc\de\alexanderwinkler\R.color.html
+* doc\de\alexanderwinkler\R.drawable.html
+* doc\de\alexanderwinkler\R.html
+* doc\de\alexanderwinkler\R.id.html
+* doc\de\alexanderwinkler\R.layout.html
+* doc\de\alexanderwinkler\R.menu.html
+* doc\de\alexanderwinkler\R.string.html
+* doc\de\alexanderwinkler\R.style.html
+* doc\de\alexanderwinkler\R.xml.html
+* doc\de\alexanderwinkler\berechnungen\
+* doc\de\alexanderwinkler\berechnungen\Kurslinie.Draw.html
+* doc\de\alexanderwinkler\berechnungen\Kurslinie.html
+* doc\de\alexanderwinkler\berechnungen\Lage.html
+* doc\de\alexanderwinkler\berechnungen\Manoever.html
+* doc\de\alexanderwinkler\berechnungen\class-use\
+* doc\de\alexanderwinkler\berechnungen\class-use\Kurslinie.Draw.html
+* doc\de\alexanderwinkler\berechnungen\class-use\Kurslinie.html
+* doc\de\alexanderwinkler\berechnungen\class-use\Lage.html
+* doc\de\alexanderwinkler\berechnungen\class-use\Manoever.html
+* doc\de\alexanderwinkler\berechnungen\package-frame.html
+* doc\de\alexanderwinkler\berechnungen\package-summary.html
+* doc\de\alexanderwinkler\berechnungen\package-tree.html
+* doc\de\alexanderwinkler\berechnungen\package-use.html
+* doc\de\alexanderwinkler\class-use\
+* doc\de\alexanderwinkler\class-use\BuildConfig.html
+* doc\de\alexanderwinkler\class-use\R.anim.html
+* doc\de\alexanderwinkler\class-use\R.array.html
+* doc\de\alexanderwinkler\class-use\R.attr.html
+* doc\de\alexanderwinkler\class-use\R.color.html
+* doc\de\alexanderwinkler\class-use\R.drawable.html
+* doc\de\alexanderwinkler\class-use\R.html
+* doc\de\alexanderwinkler\class-use\R.id.html
+* doc\de\alexanderwinkler\class-use\R.layout.html
+* doc\de\alexanderwinkler\class-use\R.menu.html
+* doc\de\alexanderwinkler\class-use\R.string.html
+* doc\de\alexanderwinkler\class-use\R.style.html
+* doc\de\alexanderwinkler\class-use\R.xml.html
+* doc\de\alexanderwinkler\div\
+* doc\de\alexanderwinkler\div\MaxInhaltTextWatcher.ErgebnisListener.html
+* doc\de\alexanderwinkler\div\MaxInhaltTextWatcher.html
+* doc\de\alexanderwinkler\div\NumberPickerFragment.OnNPValueChangeListener.html
+* doc\de\alexanderwinkler\div\NumberPickerFragment.html
+* doc\de\alexanderwinkler\div\ScalableRotateImageView.html
+* doc\de\alexanderwinkler\div\class-use\
+* doc\de\alexanderwinkler\div\class-use\MaxInhaltTextWatcher.ErgebnisListener.html
+* doc\de\alexanderwinkler\div\class-use\MaxInhaltTextWatcher.html
+* doc\de\alexanderwinkler\div\class-use\NumberPickerFragment.OnNPValueChangeListener.html
+* doc\de\alexanderwinkler\div\class-use\NumberPickerFragment.html
+* doc\de\alexanderwinkler\div\class-use\ScalableRotateImageView.html
+* doc\de\alexanderwinkler\div\package-frame.html
+* doc\de\alexanderwinkler\div\package-summary.html
+* doc\de\alexanderwinkler\div\package-tree.html
+* doc\de\alexanderwinkler\div\package-use.html
+* doc\de\alexanderwinkler\interfaces\
+* doc\de\alexanderwinkler\interfaces\BundleServer.html
+* doc\de\alexanderwinkler\interfaces\Konstanten.html
+* doc\de\alexanderwinkler\interfaces\KursWerteListener.html
+* doc\de\alexanderwinkler\interfaces\KurslinieTouchedListener.html
+* doc\de\alexanderwinkler\interfaces\ManoeverServer.html
+* doc\de\alexanderwinkler\interfaces\RadarServer.html
+* doc\de\alexanderwinkler\interfaces\TabHostKonstanten.html
+* doc\de\alexanderwinkler\interfaces\class-use\
+* doc\de\alexanderwinkler\interfaces\class-use\BundleServer.html
+* doc\de\alexanderwinkler\interfaces\class-use\Konstanten.html
+* doc\de\alexanderwinkler\interfaces\class-use\KursWerteListener.html
+* doc\de\alexanderwinkler\interfaces\class-use\KurslinieTouchedListener.html
+* doc\de\alexanderwinkler\interfaces\class-use\ManoeverServer.html
+* doc\de\alexanderwinkler\interfaces\class-use\RadarServer.html
+* doc\de\alexanderwinkler\interfaces\class-use\TabHostKonstanten.html
+* doc\de\alexanderwinkler\interfaces\package-frame.html
+* doc\de\alexanderwinkler\interfaces\package-summary.html
+* doc\de\alexanderwinkler\interfaces\package-tree.html
+* doc\de\alexanderwinkler\interfaces\package-use.html
+* doc\de\alexanderwinkler\main\
+* doc\de\alexanderwinkler\main\ActivityRadarPlottEingabe.EigenerKursChangedListener.html
+* doc\de\alexanderwinkler\main\ActivityRadarPlottEingabe.html
+* doc\de\alexanderwinkler\main\ActivityRadarPlottErgebnis.OnManoeverChangedListener.html
+* doc\de\alexanderwinkler\main\ActivityRadarPlottErgebnis.RadarChangedListener.html
+* doc\de\alexanderwinkler\main\ActivityRadarPlottErgebnis.html
+* doc\de\alexanderwinkler\main\ActivitySettings.html
+* doc\de\alexanderwinkler\main\FragmentEingabeEigSchiff.html
+* doc\de\alexanderwinkler\main\FragmentEingabeGegnerWerte.KursTextWatcher.html
+* doc\de\alexanderwinkler\main\FragmentEingabeGegnerWerte.html
+* doc\de\alexanderwinkler\main\FragmentEingabeTabHost.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisAuswahlButtons.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisEingabeTexte.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisTabHost.MyPageAdapterMulti.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisTabHost.TabCreator.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisTabHost.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisTexteLage.html
+* doc\de\alexanderwinkler\main\FragmentErgebnisTexteManoever.html
+* doc\de\alexanderwinkler\main\FragmentPreferences.html
+* doc\de\alexanderwinkler\main\FragmentRadarBild.html
+* doc\de\alexanderwinkler\main\class-use\
+* doc\de\alexanderwinkler\main\class-use\ActivityRadarPlottEingabe.EigenerKursChangedListener.html
+* doc\de\alexanderwinkler\main\class-use\ActivityRadarPlottEingabe.html
+* doc\de\alexanderwinkler\main\class-use\ActivityRadarPlottErgebnis.OnManoeverChangedListener.html
+* doc\de\alexanderwinkler\main\class-use\ActivityRadarPlottErgebnis.RadarChangedListener.html
+* doc\de\alexanderwinkler\main\class-use\ActivityRadarPlottErgebnis.html
+* doc\de\alexanderwinkler\main\class-use\ActivitySettings.html
+* doc\de\alexanderwinkler\main\class-use\FragmentEingabeEigSchiff.html
+* doc\de\alexanderwinkler\main\class-use\FragmentEingabeGegnerWerte.KursTextWatcher.html
+* doc\de\alexanderwinkler\main\class-use\FragmentEingabeGegnerWerte.html
+* doc\de\alexanderwinkler\main\class-use\FragmentEingabeTabHost.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisAuswahlButtons.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisEingabeTexte.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisTabHost.MyPageAdapterMulti.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisTabHost.TabCreator.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisTabHost.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisTexteLage.html
+* doc\de\alexanderwinkler\main\class-use\FragmentErgebnisTexteManoever.html
+* doc\de\alexanderwinkler\main\class-use\FragmentPreferences.html
+* doc\de\alexanderwinkler\main\class-use\FragmentRadarBild.html
+* doc\de\alexanderwinkler\main\package-frame.html
+* doc\de\alexanderwinkler\main\package-summary.html
+* doc\de\alexanderwinkler\main\package-tree.html
+* doc\de\alexanderwinkler\main\package-use.html
+* doc\de\alexanderwinkler\package-frame.html
+* doc\de\alexanderwinkler\package-summary.html
+* doc\de\alexanderwinkler\package-tree.html
+* doc\de\alexanderwinkler\package-use.html
+* doc\de\alexanderwinkler\tools\
+* doc\de\alexanderwinkler\tools\DecimalDigitsInputFilter.html
+* doc\de\alexanderwinkler\tools\class-use\
+* doc\de\alexanderwinkler\tools\class-use\DecimalDigitsInputFilter.html
+* doc\de\alexanderwinkler\tools\package-frame.html
+* doc\de\alexanderwinkler\tools\package-summary.html
+* doc\de\alexanderwinkler\tools\package-tree.html
+* doc\de\alexanderwinkler\tools\package-use.html
+* doc\de\alexanderwinkler\views\
+* doc\de\alexanderwinkler\views\ViewLage.NewManoeverListener.html
+* doc\de\alexanderwinkler\views\ViewLage.html
+* doc\de\alexanderwinkler\views\ViewRadarBasisBild.Kompassrose.html
+* doc\de\alexanderwinkler\views\ViewRadarBasisBild.OnScaleChangeListener.html
+* doc\de\alexanderwinkler\views\ViewRadarBasisBild.html
+* doc\de\alexanderwinkler\views\class-use\
+* doc\de\alexanderwinkler\views\class-use\ViewLage.NewManoeverListener.html
+* doc\de\alexanderwinkler\views\class-use\ViewLage.html
+* doc\de\alexanderwinkler\views\class-use\ViewRadarBasisBild.Kompassrose.html
+* doc\de\alexanderwinkler\views\class-use\ViewRadarBasisBild.OnScaleChangeListener.html
+* doc\de\alexanderwinkler\views\class-use\ViewRadarBasisBild.html
+* doc\de\alexanderwinkler\views\package-frame.html
+* doc\de\alexanderwinkler\views\package-summary.html
+* doc\de\alexanderwinkler\views\package-tree.html
+* doc\de\alexanderwinkler\views\package-use.html
+* doc\deprecated-list.html
+* doc\help-doc.html
+* doc\index-files\
+* doc\index-files\index-1.html
+* doc\index-files\index-10.html
+* doc\index-files\index-11.html
+* doc\index-files\index-12.html
+* doc\index-files\index-13.html
+* doc\index-files\index-14.html
+* doc\index-files\index-15.html
+* doc\index-files\index-16.html
+* doc\index-files\index-17.html
+* doc\index-files\index-18.html
+* doc\index-files\index-19.html
+* doc\index-files\index-2.html
+* doc\index-files\index-20.html
+* doc\index-files\index-21.html
+* doc\index-files\index-22.html
+* doc\index-files\index-23.html
+* doc\index-files\index-24.html
+* doc\index-files\index-3.html
+* doc\index-files\index-4.html
+* doc\index-files\index-5.html
+* doc\index-files\index-6.html
+* doc\index-files\index-7.html
+* doc\index-files\index-8.html
+* doc\index-files\index-9.html
+* doc\index.html
+* doc\overview-frame.html
+* doc\overview-summary.html
+* doc\overview-tree.html
+* doc\package-list
+* doc\resources\
+* doc\resources\background.gif
+* doc\resources\tab.gif
+* doc\resources\titlebar.gif
+* doc\resources\titlebar_end.gif
+* doc\serialized-form.html
+* doc\stylesheet.css
+* javadoc.xml
+* proguard-project.txt
+* radarplott-web-icon.png
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:18.0.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app\src\main\AndroidManifest.xml
+* res\ => app\src\main\res\
+* src\ => app\src\main\java\
+* src\overview.html => app\src\main\resources\overview.html
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
