@@ -12,14 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
-import de.alexanderwinkler.R;
+
 import de.alexanderwinkler.Math.Gerade2D;
 import de.alexanderwinkler.Math.Kreis2D;
 import de.alexanderwinkler.Math.Punkt2D;
+import de.alexanderwinkler.R;
 import de.alexanderwinkler.berechnungen.Lage;
 import de.alexanderwinkler.div.ScalableRotateImageView;
 import de.alexanderwinkler.interfaces.Konstanten;
-import de.alexanderwinkler.interfaces.ManoeverServer;
 
 /**
  * Zeichnet ein quadratisches Radarbild.
@@ -30,21 +30,20 @@ import de.alexanderwinkler.interfaces.ManoeverServer;
 public class ViewRadarBasisBild extends View implements Konstanten {
 	// haelt den Kontext der View
 	private Context context;
-	// Variablen zum Zeichnen
-	private Paint paint = new Paint();
-	// Pfad fuer Linien
-	private Path p = new Path();
-	// Skalierungsfaktor/ Massstab: Abstand der Radarkreise in Pixel. Notwendig,
-	// um verschiedene Aufloesungen zu bedienen
-	private float scale;
 	private boolean isInitialized = false;
 	private Kompassrose kompassrose;
 	private Lage lage;
 	private Bundle lagebundle;
-	private ManoeverServer mManoeverServer;
 	private OnScaleChangeListener mScaleChangeListener;
-	private int rastergroesse = 3;
 	private boolean northupOrientierung;
+	// Pfad fuer Linien
+	private Path p = new Path();
+	// Variablen zum Zeichnen
+	private Paint paint = new Paint();
+	private int rastergroesse = 3;
+	// Skalierungsfaktor/ Massstab: Abstand der Radarkreise in Pixel. Notwendig,
+	// um verschiedene Aufloesungen zu bedienen
+	private float scale;
 	
 	{
 		// Holen der Kompassrose
@@ -54,12 +53,8 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 		paint.setColor(colorRadarLinien);
 	}
 	
-	public interface OnScaleChangeListener {
-		public void onScaleChanged(float scale);
-	}
-	
 	/**
-	 * 
+	 *
 	 * @param context
 	 */
 	public ViewRadarBasisBild(Context context) {
@@ -79,30 +74,17 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 		super(context);
 		this.context = context;
 		mScaleChangeListener = onScaleChangeListener;
-		try {
-			mManoeverServer = (ManoeverServer) context;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString()
-					+ " must implement ManoeverServer!");
-		}
-		try {
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString()
-					+ " must implement OnKurslinieTouchedListener!");
-		}
-		lagebundle = mManoeverServer.getBundle();
-		lage = (Lage) lagebundle.getSerializable(KEYLAGE);
 		initRadarBild();
 	}
 	
 	/**
 	 * Festlegen der Groesse des Radarbildes.
-	 * 
+	 *
 	 * @param rastergroesse
 	 *            Anzahl der gewuenschten Rasterkreise
 	 */
 	public void initRadarBild() {
-		
+
 		// Radarbild erstellen, nur wenn Breite und Hoehe ungleich
 		// 0 sind.
 		if (getWidth() * getHeight() != 0) {
@@ -155,35 +137,9 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 		}
 	}
 	
-	public void setRastergroesse(int rastergroesse) {
-		this.rastergroesse = rastergroesse;
-		initRadarBild();
-	}
-	
-	public void setNorthUpOrientierung(boolean northupOrientierung) {
-		this.northupOrientierung = northupOrientierung;
-		kompassrose = new Kompassrose();
-		invalidate();
-	}
-	
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View#onSizeChanged(int, int, int, int)
-	 */
-	@Override
-	public void onSizeChanged(int w, int h, int oldw, int oldh) {
-		// neuinitialisieren des Radarbildes, da sich die Skalierung geaendert
-		// hat.
-		if (w * h * rastergroesse != 0) {
-			initRadarBild();
-			kompassrose = new Kompassrose();
-		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see android.view.View#onDraw(android.graphics.Canvas)
 	 */
 	@Override
@@ -204,11 +160,41 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 			canvas.restore();
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see android.view.View#onSizeChanged(int, int, int, int)
+	 */
+	@Override
+	public void onSizeChanged(int w, int h, int oldw, int oldh) {
+		// neuinitialisieren des Radarbildes, da sich die Skalierung geaendert
+		// hat.
+		if (w * h * rastergroesse != 0) {
+			initRadarBild();
+			kompassrose = new Kompassrose();
+		}
+	}
+
+	public void setNorthUpOrientierung(boolean northupOrientierung) {
+		this.northupOrientierung = northupOrientierung;
+		kompassrose = new Kompassrose();
+		invalidate();
+	}
+
+	public void setRastergroesse(int rastergroesse) {
+		this.rastergroesse = rastergroesse;
+		initRadarBild();
+	}
+
+	public interface OnScaleChangeListener {
+		void onScaleChanged(float scale);
+	}
 	
 	public class Kompassrose {
-		private Drawable kompassdrawable;
-		private Bitmap kompassbitmap, kompassorig;
 		private Rect bounds;
+		private Bitmap kompassbitmap, kompassorig;
+		private Drawable kompassdrawable;
 		
 		public Kompassrose() {
 			int w = ViewRadarBasisBild.this.getWidth();

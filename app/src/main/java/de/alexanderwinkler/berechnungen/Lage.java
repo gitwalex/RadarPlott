@@ -1,16 +1,18 @@
 package de.alexanderwinkler.berechnungen;
 
 import android.util.Log;
+
 import java.io.Serializable;
 
 import de.alexanderwinkler.Math.Kreis2D;
 import de.alexanderwinkler.Math.Punkt2D;
 import de.alexanderwinkler.Math.Vektor2D;
 import de.alexanderwinkler.interfaces.Konstanten;
+
 /**
- * Klasse zur Beschreibung einer Lage zwischen dem eigenen Schiff (A) und einem
- * 'Gegner' (B). Berechnet aus zwei Peilungen und einem dazwischenliegenden
- * Intervall diverse Lage-Ergebnisse (z.B. CPA)
+ * Klasse zur Beschreibung einer Lage zwischen dem eigenen Schiff (A) und einem 'Gegner' (B).
+ * Berechnet aus zwei Peilungen und einem dazwischenliegenden Intervall diverse Lage-Ergebnisse
+ * (z.B. CPA)
  *
  * @author Alexander Winkler
  */
@@ -20,8 +22,7 @@ public class Lage implements Konstanten, Serializable {
      */
     private static final long serialVersionUID = 1L;
     public Kurslinie a, b0, b1, b2, cpa;
-    protected double eEigKurs, eEigFahrt, eIntervall, rasp1, eDistanz1, rasp2,
-            eDistanz2;
+    protected double eEigKurs, eEigFahrt, eIntervall, rasp1, eDistanz1, rasp2, eDistanz2;
     protected double[] eingabewerte;
     protected Boolean northup;
     protected Punkt2D pos1_a, pos2_a, pos0_b, pos1_b, pos2_b;
@@ -30,37 +31,22 @@ public class Lage implements Konstanten, Serializable {
      */
     private String tag;
 
-    /**
-     * Bei Addition oder Subtraktion kann der Winkel ausserhalb des Intervals
-     * [0..360] liegen. Dies wird hier korrigiert
-     *
-     * @param Ursprungswinkel Kann beliebige Werte enthalten
-     * @return Winkel im Intervall [0..360]
-     */
-    public static double korrigiereWinkel (double d) {
-        while (d > 360) {
-            d -= 360;
-        }
-        while (d < 0) {
-            d += 360d;
-        }
-        return d;
-    }
-
-    public Lage () {
+    public Lage() {
     }
 
     /**
      * Berechnet aus der Peilung eines Schiffes die aktuelle Lage.
      *
-     * @param northup true: Peilung erfolgt mit rechtweisend Nord
-     * @param intervall Dauer zwischen zwei Peilungen
-     * @param punkt Punkt-Array (Reihenfolge beachten) - Wahre Position A bei
-     * erster Peilung - Wahre Position A bei zweiter Peilung - Position B bei
-     * erster Peilung - Wahre Position B bei erster Peilung - Position B bei
-     * zweiter Peilung
+     * @param northup
+     *         true: Peilung erfolgt mit rechtweisend Nord
+     * @param intervall
+     *         Dauer zwischen zwei Peilungen
+     * @param punkt
+     *         Punkt-Array (Reihenfolge beachten) - Wahre Position A bei erster Peilung - Wahre
+     *         Position A bei zweiter Peilung - Position B bei erster Peilung - Wahre Position B bei
+     *         erster Peilung - Position B bei zweiter Peilung
      */
-    public Lage (boolean northup, double intervall, Punkt2D... punkt) {
+    public Lage(boolean northup, double intervall, Punkt2D... punkt) {
         pos1_a = punkt[0];
         pos2_a = punkt[1];
         pos0_b = punkt[2];
@@ -83,15 +69,16 @@ public class Lage implements Konstanten, Serializable {
     /**
      * Berechnet aus der Peilung eines Schiffes die aktuelle Lage.
      *
-     * @param northup true: Peilung erfolgt mit rechtweisend Nord
-     * @param werte Double-Array mit folgenden Inhalt (Reihenfolge beachten): -
-     * Kurs A (rechtweisend) - Fahrt A (in Knoten) - Intervall zwischen zwei
-     * Peilungen (Minuten) - Seitenpeilung B zum Zeitpunkt x - Distanz B zum
-     * Zeitpunkt x (Seemeilen) - Seitenpeilung B zum Zeitpunkt x + intervall
-     * -Distanz B zum Zeitpunkt x + Intervall (Seemeilen) - Headup: Peilungen
-     * sind Radarseitenpeilungen (true)
+     * @param northup
+     *         true: Peilung erfolgt mit rechtweisend Nord
+     * @param werte
+     *         Double-Array mit folgenden Inhalt (Reihenfolge beachten): - Kurs A (rechtweisend) -
+     *         Fahrt A (in Knoten) - Intervall zwischen zwei Peilungen (Minuten) - Seitenpeilung B
+     *         zum Zeitpunkt x - Distanz B zum Zeitpunkt x (Seemeilen) - Seitenpeilung B zum
+     *         Zeitpunkt x + intervall -Distanz B zum Zeitpunkt x + Intervall (Seemeilen) - Headup:
+     *         Peilungen sind Radarseitenpeilungen (true)
      */
-    public Lage (boolean northup, double... werte) {
+    public Lage(boolean northup, double... werte) {
         eEigKurs = werte[0];
         eEigFahrt = werte[1];
         eIntervall = werte[2];
@@ -105,26 +92,41 @@ public class Lage implements Konstanten, Serializable {
     }
 
     /**
+     * Bei Addition oder Subtraktion kann der Winkel ausserhalb des Intervals [0..360] liegen. Dies
+     * wird hier korrigiert
+     *
+     * @param winkel
+     *         Kann beliebige Werte enthalten
+     *
+     * @return Winkel im Intervall [0..360]
+     */
+    public static double korrigiereWinkel(double winkel) {
+        while (winkel > 360) {
+            winkel -= 360;
+        }
+        while (winkel < 0) {
+            winkel += 360d;
+        }
+        return winkel;
+    }
+
+    /**
      * Berechnet die Kurslinie zu einem bestimmten Intervall
      *
-     * @param Intervall zwischen zwei Peilungen
+     * @param intervall
+     *         zwischen zwei Peilungen
      */
-    public final void berechneKurslinien (double eIntervall) {
+    public final void berechneKurslinien(double intervall) {
         // Kurslinie A aus zwei Werten
-        a = new Kurslinie(pos1_a, pos2_a, eIntervall);
-        a.setTag("A");
+        a = new Kurslinie(pos1_a, pos2_a, intervall);
         // Kurslinie A im Verhaeltnis zur Kurslinie B
-        b0 = new Kurslinie(pos0_b, pos1_b, eIntervall);
-        b0.setTag("b0");
+        b0 = new Kurslinie(pos0_b, pos1_b, intervall);
         // Wahre Kurslinie B
-        b1 = new Kurslinie(pos0_b, pos2_b, eIntervall);
-        b1.setTag("b1");
+        b1 = new Kurslinie(pos0_b, pos2_b, intervall);
         // Relative Kurslinie B nur zwischen den peilungen
-        b2 = new Kurslinie(pos1_b, pos2_b, eIntervall);
-        b2.setTag("b2");
+        b2 = new Kurslinie(pos1_b, pos2_b, intervall);
         // CPA-Linie
-        cpa = new Kurslinie(pos2_a, a.getCPAOrt(b2), eIntervall);
-        cpa.setTag("cpa");
+        cpa = new Kurslinie(pos2_a, a.getCPAOrt(b2), intervall);
     }
 
     /**
@@ -132,7 +134,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Abstand, in der B die Kurslinie von A passiert
      */
-    public Double getBCR () {
+    public Double getBCR() {
         Punkt2D p = a.getSchnittpunkt(b2);
         double d = pos2_a.abstand(p);
         if (!a.isPunktInFahrtrichtung(p)) {
@@ -142,12 +144,11 @@ public class Lage implements Konstanten, Serializable {
     }
 
     /**
-     * Zeit bis zum passieren der Kurslinie. Ist negativ, wenn die Kurslinie
-     * bereits passiert wurde
+     * Zeit bis zum passieren der Kurslinie. Ist negativ, wenn die Kurslinie bereits passiert wurde
      *
      * @return Dauer bis zum passieren der Kurslinie (in Minuten)
      */
-    public Double getBCT () {
+    public Double getBCT() {
         Punkt2D p = a.getSchnittpunkt(b2);
         return b2.getDauer(p);
     }
@@ -157,7 +158,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Entfernung des CPA in Seemeilen
      */
-    public double getCPA () {
+    public double getCPA() {
         double d = b2.getAbstand(pos2_a);
         Punkt2D cpa = a.getCPAOrt(b2);
         if (!b2.isPunktInFahrtrichtung(cpa)) {
@@ -171,10 +172,9 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Entfernung zum CPA in sm
      */
-    public double getCPAEntfernung () {
+    public double getCPAEntfernung() {
         Punkt2D cpa = a.getCPAOrt(b2);
-        double d = b2.getEntfernung(cpa);
-        return d;
+        return b2.getEntfernung(cpa);
     }
 
     /**
@@ -182,10 +182,9 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Entferung in sm
      */
-    public double getEntfernungKurslinie () {
+    public double getEntfernungKurslinie() {
         Punkt2D p = a.getSchnittpunkt(b2);
-        double d = b2.getEntfernung(p);
-        return d;
+        return b2.getEntfernung(p);
     }
 
     /**
@@ -193,7 +192,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Kurs A rechtweisend
      */
-    public int getKAa () {
+    public int getKAa() {
         return (int) a.getWinkelRW();
     }
 
@@ -202,7 +201,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return wahren Kurs B
      */
-    public Double getKB () {
+    public Double getKB() {
         return b1.getWinkelRW();
     }
 
@@ -211,17 +210,16 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relativer Kurs B rechtweisend
      */
-    public Double getKBr () {
+    public Double getKBr() {
         return b2.getWinkelRW();
     }
 
     /**
-     * Groesste Distanz zwischen den Peilungen auf die naechste ganze Zahl
-     * gerundet
+     * Groesste Distanz zwischen den Peilungen auf die naechste ganze Zahl gerundet
      *
      * @return groesste Distanz
      */
-    public int getMaxDistanz () {
+    public int getMaxDistanz() {
         return (int) Math.max(Math.ceil(eDistanz1), Math.ceil(eDistanz2));
     }
 
@@ -230,7 +228,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return rechtweisende Peilung zum CPA
      */
-    public Double getPCPA () {
+    public Double getPCPA() {
         Punkt2D p = a.getCPAOrt(b2);
         Vektor2D v = new Vektor2D(new Punkt2D(0.0, 0.0), p);
         return v.getWinkelRechtweisendNord();
@@ -241,9 +239,8 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Seitenpeilung
      */
-    public Double getRASP2 () {
-        double angle = new Vektor2D(new Punkt2D(0, 0), b2.ap)
-                .getWinkelRechtweisendNord();
+    public Double getRASP2() {
+        double angle = new Vektor2D(new Punkt2D(0, 0), b2.ap).getWinkelRechtweisendNord();
         angle = 360d - a.getWinkelRW() + angle;
         return korrigiereWinkel(angle);
     }
@@ -253,10 +250,9 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Seitenpeilung zum CPA
      */
-    public Double getSCPA () {
+    public Double getSCPA() {
         double pcpa = getPCPA();
-        double scpa = korrigiereWinkel(pcpa - eEigKurs);
-        return scpa;
+        return korrigiereWinkel(pcpa - eEigKurs);
     }
 
     /**
@@ -264,12 +260,12 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Dauer bis CPA (in Minuten)
      */
-    public Double getTCPA () {
+    public Double getTCPA() {
         Punkt2D p = a.getCPAOrt(b2);
         return b2.getDauer(p);
     }
 
-    public String getTag () {
+    public String getTag() {
         return tag;
     }
 
@@ -278,7 +274,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Kurs A
      */
-    public double geteEigKurs () {
+    public double geteEigKurs() {
         return eEigKurs;
     }
 
@@ -287,7 +283,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relaitve Geschwindigkeit B (in Knoten)
      */
-    public Double getvB () {
+    public Double getvB() {
         return b1.getGeschwindigkeitRounded();
     }
 
@@ -296,19 +292,17 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relative Geschwindigkeit B in Knoten
      */
-    public Double getvBr () {
+    public Double getvBr() {
         return b2.getGeschwindigkeitRounded();
     }
 
     /**
      * Initialisiert Kurslinien
      */
-    private final void init () {
+    private void init() {
         // wahre Position a bei erster Peilung
-        pos1_a = new Punkt2D(-(eEigFahrt / (60 / eIntervall) * Math
-                .sin(Math.toRadians(eEigKurs))),
-                -(eEigFahrt / (60 / eIntervall) * Math
-                        .cos(Math.toRadians(eEigKurs))));
+        pos1_a = new Punkt2D(-(eEigFahrt / (60 / eIntervall) * Math.sin(Math.toRadians(eEigKurs))),
+                -(eEigFahrt / (60 / eIntervall) * Math.cos(Math.toRadians(eEigKurs))));
         // wahre Position a bei zweiter Peilung
         pos2_a = new Punkt2D(0.0, 0.0);
         // Position b bei erster Peilung
@@ -321,16 +315,17 @@ public class Lage implements Konstanten, Serializable {
     }
 
     /**
-     * Ermittelt einen neuen Kurs, um eine neue Lage aufgrund eines gewuenschten
-     * CPA zu erreichen.
+     * Ermittelt einen neuen Kurs, um eine neue Lage aufgrund eines gewuenschten CPA zu erreichen.
      *
-     * @param newcpa der gewuenschte neue CPA
+     * @param newcpa
+     *         der gewuenschte neue CPA
+     *
      * @return der einzuschlagende Kurs fuer den neuen CPA.
      *
-     * @throws IllegalArgumentException wenn der gewuenschte CPA durch keine
-     * denkbare Kursaenderung erreichbar ist.
+     * @throws IllegalArgumentException
+     *         wenn der gewuenschte CPA durch keine denkbare Kursaenderung erreichbar ist.
      */
-    public Double newCPA (double newcpa) throws IllegalArgumentException {
+    public Double newCPA(double newcpa) throws IllegalArgumentException {
         // Ein gewunschter CPA kann durch eine Kursaenderung A erreicht werden.
         // Daher wird aufgrund des newcpa der neue Kurs berechnet, und
         // zurueckgeliefert.
@@ -353,8 +348,7 @@ public class Lage implements Konstanten, Serializable {
         // Schnittpunkte berechnen
         Punkt2D[] erg = k2.schnittpunkt(k1);
         if (erg == null) {
-            Log.d(LOGTAG,
-                    "Fehler bei Lage.newCPA(double newcpa), Parameter: " + newcpa);
+            Log.d(LOGTAG, "Fehler bei Lage.newCPA(double newcpa), Parameter: " + newcpa);
             throw new IllegalArgumentException(
                     "Keine CPA-Berechnung moeglich. CPA nicht erreichbar!.");
         }
@@ -390,14 +384,14 @@ public class Lage implements Konstanten, Serializable {
         return newKursA;
     }
 
-    public void setFahrtaenderung (double neueGeschwindigkeit) {
+    public void setFahrtaenderung(double neueGeschwindigkeit) {
         // Bei einer Fahrtreduzierung knicken alle Relativbewegungen
         // vorlicher ab.
         // Bei einer Beschleunigung knicken sie so ab, dass sie achterlicher
         // erscheinen
     }
 
-    public void setTag (String tag) {
+    public void setTag(String tag) {
         this.tag = tag;
     }
 }

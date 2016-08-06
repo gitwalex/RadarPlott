@@ -63,4 +63,5 @@
     <string name="tabGegnerD">Gegner D</string>
     <string name="tabRadarBild">Grafik</string>
     <string name="tabSpinner">Manöver</string>
+    <string name="Bearbeiten">Dateneingabe</string>
 </resources>
