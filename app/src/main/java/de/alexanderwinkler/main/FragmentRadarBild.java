@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class FragmentRadarBild extends Fragment
         OnTouchListener, ManoeverListener {
     private int angle;
     private boolean dual_pane;
-    private ArrayList<ViewLage> mViewLageArray;
+    private ArrayList<ViewLage> mViewLageArray = new ArrayList<>();
     private boolean northupOrientierung;
     private int rastergroesse = 3;
     private ViewLage vLageB, vLageC, vLageD;
@@ -44,27 +43,6 @@ public class FragmentRadarBild extends Fragment
         return rastergroesse;
     }
 
-    /*
-         * (non-Javadoc)
-         *
-         * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
-         */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewLageArray = new ArrayList<>();
-        FrameLayout fl = (FrameLayout) view.findViewById(R.id.radarbildcontainer);
-        vRadarbild = new ViewRadarBasisBild(getActivity(), this);
-        fl.addView(vRadarbild);
-        updateRastergroesse();
-        updateNorthup();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see android.app.Fragment#onCreate(android.os.Bundle)
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +65,9 @@ public class FragmentRadarBild extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_radarbild, container, false);
+        vRadarbild = (ViewRadarBasisBild) view.findViewById(R.id.radarspinne);
+        updateRastergroesse();
+        updateNorthup();
         return view;
     }
 
