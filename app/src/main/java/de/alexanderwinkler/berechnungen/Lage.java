@@ -240,7 +240,7 @@ public class Lage implements Konstanten, Serializable {
      * @return Seitenpeilung
      */
     public Double getRASP2() {
-        double angle = new Vektor2D(new Punkt2D(0, 0), b2.ap).getWinkelRechtweisendNord();
+        double angle = new Vektor2D(new Punkt2D(0, 0), b2.aktPosition).getWinkelRechtweisendNord();
         angle = 360d - a.getWinkelRW() + angle;
         return korrigiereWinkel(angle);
     }
@@ -330,8 +330,8 @@ public class Lage implements Konstanten, Serializable {
         // Daher wird aufgrund des newcpa der neue Kurs berechnet, und
         // zurueckgeliefert.
         // Ist der CPA nicht erreichbar, wird null geliefert.
-        Punkt2D aktA = a.ap;
-        Punkt2D aktB = b2.ap;
+        Punkt2D aktA = a.aktPosition;
+        Punkt2D aktB = b2.aktPosition;
         // Aufspannen eines Kreises ueber dem relativen Kurs von B. Mittelpunkt
         // ist der Punkt zwischen dem aktuellen Punkt B und A. Radius ist die
         // Entfernung zwischen den Punkten /2.
@@ -355,14 +355,14 @@ public class Lage implements Konstanten, Serializable {
         double newKursA, delta1 = 0, delta2 = 0;
         // Neuer Relativkurs B
         double kursB = b2.getWinkelRW();
-        Vektor2D v = new Vektor2D(b2.getAp(), erg[0]);
+        Vektor2D v = new Vektor2D(b2.getAktPosition(), erg[0]);
         double delta = v.getWinkelRechtweisendNord() - kursB;
         if (delta < 0) {
             delta1 = delta;
         } else {
             delta2 = delta;
         }
-        v = new Vektor2D(b2.getAp(), erg[1]);
+        v = new Vektor2D(b2.getAktPosition(), erg[1]);
         delta = v.getWinkelRechtweisendNord() - kursB;
         if (delta < 0) {
             delta1 = delta;

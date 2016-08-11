@@ -3,13 +3,12 @@ package de.alexanderwinkler.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import de.alexanderwinkler.R;
 
@@ -19,13 +18,6 @@ import static android.support.v7.widget.RecyclerView.Adapter;
  * Created by alex on 05.08.2016.
  */
 public class FragmentEingabeDaten extends Fragment {
-    public static FragmentEingabeDaten newInstance() {
-        Bundle args = new Bundle();
-        FragmentEingabeDaten fragment = new FragmentEingabeDaten();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +32,6 @@ public class FragmentEingabeDaten extends Fragment {
         rv.setAdapter(new EingabeDatenAdapter());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
-        int width = getResources().getDisplayMetrics().widthPixels / 2;
-        DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) container.getLayoutParams();
-        params.width = width;
-        rv.setLayoutParams(params);
         return view;
     }
 
@@ -75,7 +63,13 @@ public class FragmentEingabeDaten extends Fragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Log.d("de.alexanderwinkler", "OnBindViewHolder");
+            switch (holder.getItemViewType()) {
+                case VIEWTYPE_GEGNER:
+                    String text = String.valueOf((char) ('A' + position));
+                    TextView tv = (TextView) holder.itemView.findViewById(R.id.HeaderGegner);
+                    String s = String.format(getResources().getString(R.string.Gegner), text);
+                    tv.setText(s);
+            }
         }
 
         @Override

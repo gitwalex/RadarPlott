@@ -4,12 +4,17 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import de.alexanderwinkler.Math.Gerade2D;
-import de.alexanderwinkler.Math.Kreis2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.alexanderwinkler.Math.Punkt2D;
+import de.alexanderwinkler.berechnungen.Kurslinie;
 import de.alexanderwinkler.berechnungen.Lage;
 import de.alexanderwinkler.interfaces.Konstanten;
 
@@ -19,16 +24,20 @@ import de.alexanderwinkler.interfaces.Konstanten;
  * @author Alexander Winkler
  */
 public class ViewRadarBasisBild extends View implements Konstanten {
+    public final static int RADARRINGE = 9;
     // haelt den Kontext der View
-    private Lage lage;
-    private OnScaleChangeListener mScaleChangeListener;
+    private List<Lage> lagelist = new ArrayList<>();
+    private Kurslinie mEigeneKurslinie;
+    private ScaleGestureDetector mScaleDetector;
     private boolean northupOrientierung;
     // Variablen zum Zeichnen
     private Paint paint = new Paint();
-    private int rastergroesse = 3;
-    // Skalierungsfaktor/ Massstab: Abstand der Radarkreise in Pixel. Notwendig,
-    // um verschiedene Aufloesungen zu bedienen
-    private float scale;
+    private Path pathRinge = new Path();
+    private Path pathSektor = new Path();
+    private Path pathSektorLinie10Grad = new Path();
+    private Path pathSektorLinie2Grad = new Path();
+    private int scale;
+    private float sektorlinienlaenge = 40.0f;
 
     {
         // Holen der Kompassrose
@@ -38,19 +47,38 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         paint.setColor(colorRadarLinien);
     }
 
-    /**
-     * @param context
-     */
     public ViewRadarBasisBild(Context context) {
         super(context);
     }
 
-    /**
-     * @param context
-     * @param attrs
-     */
     public ViewRadarBasisBild(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    private void initPath() {
+        pathRinge.reset();
+        pathSektor.reset();
+        pathSektorLinie2Grad.reset();
+        pathSektorLinie10Grad.reset();
+        for (int i = 1; i <= RADARRINGE; i++) {
+            float innerScale = scale * i / RADARRINGE;
+            float startsektorlinie2grad = innerScale - sektorlinienlaenge / 2;
+            float endsektorlinie2grad = innerScale + sektorlinienlaenge / 2;
+            float startsektorlinie10grad = innerScale - sektorlinienlaenge;
+            float endsektorlinie10grad = innerScale + sektorlinienlaenge;
+            pathRinge.addCircle(0, 0, innerScale, Path.Direction.CW);
+            // Festlegen Laenge der sektorlienien auf dem Aussenkreis
+            // Alle 2 Grad: halbe sektorlinienlaenge
+            // Alle 10 Grad: sektorlinienlaenge
+            // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
+            pathSektor.moveTo(0, 0);
+            pathSektor.lineTo(0, innerScale);
+            pathSektorLinie10Grad.moveTo(0, startsektorlinie10grad);
+            pathSektorLinie10Grad.lineTo(0, endsektorlinie10grad);
+            // Berechnen der Linien - Abstand 2 Grad
+            pathSektorLinie2Grad.moveTo(0, startsektorlinie2grad);
+            pathSektorLinie2Grad.lineTo(0, endsektorlinie2grad);
+        }
     }
 
     @Override
@@ -63,47 +91,83 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         int width = getWidth();
         int height = getHeight();
         canvas.translate(width / 2, height / 2);
-        // Zeichnen der Radarkreise
-        for (int i = 0; i < rastergroesse; i++) {
-            canvas.drawCircle(0, 0, scale * (i + 1), paint);
+        if (mEigeneKurslinie != null) {
+            mEigeneKurslinie.onDraw(canvas, scale);
         }
-        // Festlegen Skalierungsfaktor
-        scale = Math.min((height - 10) / rastergroesse / 2, (width - 10) / rastergroesse / 2);
-        // festlegen der Laenge der Linien Kreissektoren. Laenge 0.1f
-        // heisst: 0.1 sm
-        // Alle 2 Grad: Masstab (Pixel) / 40
-        // Alle 10 Grad: Masstab (Pixel) / 20
-        // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren Radarkreis
-        float sektorlinienlaenge = 0.1f * scale;
-        // mp: Mittelpunkt des Radarbildes. hp1, hp2: Hilfspunkte fuer
-        // Zeichnen
-        Punkt2D mp = new Punkt2D(), hp;
-        // Array fuer Linien zur Kennzeichnung der Sektoren
-        Punkt2D[] s = new Punkt2D[2];
-        // Zeichnen der Sektoren
+        canvas.drawPath(pathRinge, paint);
         for (int winkel = 0; winkel < 360; winkel += 2) {
-            // Berechnen der Linien - Abstand 2 Grad
-            hp = mp.mitWinkel(rastergroesse * scale, winkel);
-            // Berechnen der Linien - Abstand 30 Grad, Linie ab Nullpunkt
             if (winkel % 30 == 0) {
-                canvas.drawLine(0, 0, (float) hp.getX(), (float) hp.getY(), paint);
-            }
-            if (!hp.equals(mp)) {
-                Gerade2D g = new Gerade2D(mp, hp);
-                // Berechnen der Linien - Abstand 10 Grad
+                canvas.drawPath(pathSektor, paint);
+            } else {
                 if (winkel % 10 == 0) {
-                    Kreis2D k = new Kreis2D(hp, sektorlinienlaenge * 2);
-                    s = g.getSchnittpunkt(k);
-                    canvas.drawLine((float) s[0].getX(), (float) s[0].getY(), (float) s[1].getX(),
-                            (float) s[1].getY(), paint);
+                    canvas.drawPath(pathSektorLinie10Grad, paint);
                 }
-                Kreis2D k = new Kreis2D(hp, sektorlinienlaenge);
-                s = g.getSchnittpunkt(k);
-                canvas.drawLine((float) s[0].getX(), (float) s[0].getY(), (float) s[1].getX(),
-                        (float) s[1].getY(), paint);
+            }
+            canvas.drawPath(pathSektorLinie2Grad, paint);
+            canvas.rotate(2);
+        }
+        //        // Zeichnen der Radarkreise
+        //        for (int i = 1; i <= RADARRINGE; i++) {
+        //            float innerScale =  scale * i  / RADARRINGE;
+        //            float startsektorlinie2grad = innerScale - sektorlinienlaenge / 2;
+        //            float endsektorlinie2grad = innerScale + sektorlinienlaenge / 2;
+        //            float startsektorlinie10grad = innerScale - sektorlinienlaenge;
+        //            float endsektorlinie10grad = innerScale + sektorlinienlaenge;
+        //            canvas.drawCircle(0, 0, innerScale, paint);
+        //            // Festlegen Laenge der sektorlienien auf dem Aussenkreis
+        //            // Alle 2 Grad: halbe sektorlinienlaenge
+        //            // Alle 10 Grad: sektorlinienlaenge
+        //            // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
+        //            for (int winkel = 0; winkel < 360; winkel += 2) {
+        //                if (winkel % 30 == 0) {
+        //                    // Berechnen und Zeichnen der Sektorenlinien - Abstand 30 Grad, Linie ab Nullpunkt
+        //                    canvas.drawLine(0, 0, 0, innerScale, paint);
+        //                } else {
+        //                    if (winkel % 10 == 0) {
+        //                        // Berechnen und zeichnen der Linien - Abstand 10 Grad
+        //                        canvas.drawLine(0, startsektorlinie10grad, 0, endsektorlinie10grad, paint);
+        //                    }
+        //                }
+        //                // Berechnen der Linien - Abstand 2 Grad
+        //                canvas.drawLine(0, startsektorlinie2grad, 0, endsektorlinie2grad, paint);
+        //                canvas.rotate(2);
+        //            }
+        //        }
+        canvas.restore();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        scale = Math.min(h, w) * 2;
+        initPath();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (MotionEvent.ACTION_DOWN == event.getAction()) {
+            if (mEigeneKurslinie != null) {
+                float x = event.getX();
+                float y = event.getY();
+                Punkt2D pos = new Punkt2D(x, y);
+                if (mEigeneKurslinie.isPunktAufKurslinie(pos)) {
+                    mEigeneKurslinie.drawFett();
+                    invalidate();
+                    return true;
+                }
             }
         }
-        canvas.restore();
+        return mScaleDetector.onTouchEvent(event);
+    }
+
+    public void setEigeneKurslinie(Kurslinie kurslinie) {
+        this.mEigeneKurslinie = kurslinie;
+        invalidate();
     }
 
     public void setNorthUpOrientierung(boolean northupOrientierung) {
@@ -111,11 +175,13 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         invalidate();
     }
 
-    public void setRastergroesse(int rastergroesse) {
-        this.rastergroesse = rastergroesse;
-    }
-
-    public interface OnScaleChangeListener {
-        void onScaleChanged(float scale);
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale *= detector.getScaleFactor();
+            initPath();
+            invalidate();
+            return true;
+        }
     }
 }

@@ -16,11 +16,11 @@ public class Manoever extends Lage {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public final Kurslinie b3;
 	/**
-	 * 
+	 *
 	 */
 	private final Lage oldLage;
-	public final Kurslinie b3;
 	
 	/**
 	 * Konstruktor fuer das Manoever 'Kursaenderung von A'
@@ -50,8 +50,8 @@ public class Manoever extends Lage {
 		// wahre Position a bei zweiter Peilung
 		pos2_a = p;
 		// Position b zum Zeitpunkt Manoeverminuten
-		Punkt2D manoeverOrt = lage.b2.getPunktinFahrtrichtungnachDauer(
-				lage.b2.getAp(), manoeverminuten);
+		Punkt2D manoeverOrt = lage.b2.getPunktinFahrtrichtungnachDauer(lage.b2.getAktPosition(),
+				manoeverminuten);
 		Vektor2D manoeverVektor = new Vektor2D(lage.pos2_b, manoeverOrt);
 		// relative (relative) Position b nach manoeverminuten bei erster
 		// Peilung
@@ -66,8 +66,7 @@ public class Manoever extends Lage {
 		
 		pos1_b = pos2_a.mitWinkel(eDistanz1, rasp1);
 		berechneKurslinien(eIntervall);
-		
-		b3 = new Kurslinie(lage.b2.getAp(), b2.getRichtungsvektor(),
+		b3 = new Kurslinie(lage.b2.getAktPosition(), b2.getRichtungsvektor(),
 				lage.eEigFahrt);
 		oldLage = lage;
 	}

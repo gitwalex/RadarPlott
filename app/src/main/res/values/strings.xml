@@ -6,8 +6,9 @@
     <string name="eigSchiff">Eigenes Schiff</string>
     <string name="eigKurs">Kurs (rw)</string>
     <string name="eigFahrt">Fahrt (kn)</string>
-    <string name="Peilung1B">1. Seitenpeilung B</string>
-    <string name="Peilung2B">2. Seitenpeilung B</string>
+    <string name="Gegner">Gegner %1$s</string>
+    <string name="Peilung1B">1. Seitenpeilung</string>
+    <string name="Peilung2B">2. Seitenpeilung</string>
     <string name="SP">Seitenpeilung</string>
     <string name="RSP">Radarseitenpeilung</string>
     <string name="Distanz">Distanz</string>

@@ -13,6 +13,16 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/HeaderGegner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="10sp"
+            android:text="@string/Gegner"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"/>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -139,7 +149,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="10sp"
-            android:text="@string/Peilung1B"
+            android:text="@string/Peilung2B"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"/>
 

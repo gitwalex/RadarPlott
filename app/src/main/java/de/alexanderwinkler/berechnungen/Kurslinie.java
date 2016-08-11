@@ -1,6 +1,7 @@
 package de.alexanderwinkler.berechnungen;
 
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcel;
@@ -11,6 +12,7 @@ import de.alexanderwinkler.Math.Kreis2D;
 import de.alexanderwinkler.Math.Punkt2D;
 import de.alexanderwinkler.Math.Vektor2D;
 import de.alexanderwinkler.interfaces.Konstanten;
+import de.alexanderwinkler.views.ViewRadarBasisBild;
 
 /**
  * Die Klasse Kurslinie bietet Funktionen zum ermitteln von bestimmten Daten der Bewegung eines
@@ -18,7 +20,7 @@ import de.alexanderwinkler.interfaces.Konstanten;
  *
  * @author Alexander Winkler
  */
-public class Kurslinie extends Gerade2D {
+public class Kurslinie extends Gerade2D implements Konstanten {
     /**
      *
      */
@@ -33,16 +35,29 @@ public class Kurslinie extends Gerade2D {
             return new Kurslinie[size];
         }
     };
+    private static final Paint dottedLine;
+    private static final Paint normalLine = new Paint();
     /* Startposition, aktuelle Position */
     private static final String LOGTAG = "de.alexanderwinkler";
+
+    static {
+        normalLine.setStrokeWidth(zeichnelagenormal);
+        normalLine.setAntiAlias(true);
+        normalLine.setStyle(Paint.Style.STROKE);
+        normalLine.setColor(colorA);
+        normalLine.setStrokeWidth(zeichnelagefett);
+        dottedLine = new Paint(normalLine);
+        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+    }
+
     /**
      *
      */
-    protected final Punkt2D ap;
+    protected final Punkt2D aktPosition;
     /**
      *
      */
-    protected final Punkt2D sp;
+    protected final Punkt2D startPosition;
     /**
      *
      */
@@ -59,35 +74,30 @@ public class Kurslinie extends Gerade2D {
      *
      */
     protected final double intervall;
+    private final Path oldpath = new Path();
+    private final Path destpath = new Path();
     /**
+     *
      *
      */
     private final Vektor2D richtungsvektor;
+
     /**
-     * Erstellt eine Kurslinie anhand zweier (Peil-)Punkte in einem bestimmten
-     * Intervall
+     * Erstellt eine Kurslinie anhand zweier (Peil-)Punkte in einem bestimmten Intervall
      *
      * @param von
-     *            Standort zum Zeitpunkt x
+     *         Standort zum Zeitpunkt x
      * @param nach
-     *            Standort zum Zeitpunkt x + Intervall (=aktueller Standort)
+     *         Standort zum Zeitpunkt x + Intervall (=aktueller Standort)
      * @param intervall
-     *            Intervall in Minuten zwischen den Punkten
-     */
-    /**
-     * @param von
-     *         Startpunkt
-     * @param nach
-     *         Endpunkt
-     * @param intervall
-     *         Intervall in Minute zwiwchen den Punkten
+     *         Intervall in Minuten zwischen den Punkten
      */
     public Kurslinie(Punkt2D von, Punkt2D nach, double intervall) {
         super(von, nach);
-        ap = nach;
-        sp = von;
+        aktPosition = nach;
+        startPosition = von;
         richtungsvektor = super.getRichtungsvektor();
-        winkel = richtungsvektor.getWinkelRechtweisendNord();
+        winkel = Math.round(richtungsvektor.getWinkelRechtweisendNord());
         this.intervall = intervall;
         weglaenge = Math.abs(nach.abstand(von));
         geschwindigkeit = weglaenge * 60 / intervall;
@@ -105,24 +115,24 @@ public class Kurslinie extends Gerade2D {
      */
     public Kurslinie(Punkt2D von, Vektor2D richtung, double geschwindigkeit) {
         super(von, richtung);
-        ap = von;
+        aktPosition = von;
         // Startpunkt ist aktueller Punkt abzueglich Richtungsvektor
         double x1 = von.getX();
         double y1 = von.getY();
         double x2 = richtung.getEndpunkt().getX();
         double y2 = richtung.getEndpunkt().getY();
-        sp = new Punkt2D(x2 - x1, y2 - y1);
+        startPosition = new Punkt2D(x2 - x1, y2 - y1);
         richtungsvektor = super.getRichtungsvektor();
         winkel = richtungsvektor.getWinkelRechtweisendNord();
         this.geschwindigkeit = geschwindigkeit;
-        weglaenge = Math.abs(sp.abstand(von));
+        weglaenge = Math.abs(startPosition.abstand(von));
         intervall = weglaenge * 60 / geschwindigkeit;
     }
 
     protected Kurslinie(Parcel in) {
         super(in);
-        this.ap = in.readParcelable(Punkt2D.class.getClassLoader());
-        this.sp = in.readParcelable(Punkt2D.class.getClassLoader());
+        this.aktPosition = in.readParcelable(Punkt2D.class.getClassLoader());
+        this.startPosition = in.readParcelable(Punkt2D.class.getClassLoader());
         this.winkel = in.readDouble();
         this.weglaenge = in.readDouble();
         this.geschwindigkeit = in.readDouble();
@@ -136,12 +146,26 @@ public class Kurslinie extends Gerade2D {
     }
 
     /**
+     * Zeichne die Linie Fett.
+     */
+    public void drawFett() {
+        normalLine.setStrokeWidth(zeichnelagefett);
+    }
+
+    /**
+     * Zeichne die Linie Normal.
+     */
+    public void drawNormal() {
+        normalLine.setStrokeWidth(zeichnelagenormal);
+    }
+
+    /**
      * Aktueller Standort
      *
      * @return aktueller Standort
      */
-    public Punkt2D getAp() {
-        return ap;
+    public Punkt2D getAktPosition() {
+        return aktPosition;
     }
 
     /**
@@ -180,7 +204,7 @@ public class Kurslinie extends Gerade2D {
             throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
         }
         // Punkt liegt auf Geraden: Abstand berechnen
-        double abstand = ap.abstand(p);
+        double abstand = aktPosition.abstand(p);
         // Dauer berechnen. Absolutwert. Da Geschwindigkeit in Seemeilen
         // gerechnet wird, wird hier die Zeit in Stunden gerechnent.
         double zeit = Math.abs(abstand / geschwindigkeit);
@@ -213,9 +237,11 @@ public class Kurslinie extends Gerade2D {
         double lambda;
         // Punkt liegt auf der Geraden. Berechnen, wie gross die Entfernung ist
         if (richtungsvektor.getEndpunkt().getX() != 0) {
-            lambda = (punktaufkurslinie.getX() - ap.getX()) / richtungsvektor.getEndpunkt().getX();
+            lambda = (punktaufkurslinie.getX() - aktPosition.getX()) / richtungsvektor.getEndpunkt()
+                    .getX();
         } else {
-            lambda = (punktaufkurslinie.getY() - ap.getY()) / richtungsvektor.getEndpunkt().getY();
+            lambda = (punktaufkurslinie.getY() - aktPosition.getY()) / richtungsvektor.getEndpunkt()
+                    .getY();
         }
         return Math.abs(lambda);
     }
@@ -354,8 +380,7 @@ public class Kurslinie extends Gerade2D {
             throw new IllegalArgumentException("Punkt liegt auf Kurslinie");
         }
         Vektor2D v = new Vektor2D(getLotpunkt(p));
-        double erg = v.getWinkelRechtweisendNord();
-        return erg;
+        return v.getWinkelRechtweisendNord();
     }
 
     /**
@@ -363,8 +388,8 @@ public class Kurslinie extends Gerade2D {
      *
      * @return Startpunkt zum Zeitpunkt x
      */
-    public Punkt2D getSp() {
-        return sp;
+    public Punkt2D getStartPosition() {
+        return startPosition;
     }
 
     /**
@@ -432,11 +457,9 @@ public class Kurslinie extends Gerade2D {
      * Prueft, ob ein Punkt in Fahrtrichtung liegt.
      *
      * @param p
+     *         zu pruefender Punkt
      *
-     * @return
-     *
-     * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     * @return true, wenn der Punkt in Fahrtrichtung liegt. Sonst false.
      */
     public boolean isPunktInFahrtrichtung(Punkt2D p) {
         if (!isPunktAufKurslinie(p)) {
@@ -446,11 +469,46 @@ public class Kurslinie extends Gerade2D {
         double wegy = richtungsvektor.getEndpunkt().getY();
         double lambda;
         if (wegx != 0) {
-            lambda = (p.getX() - ap.getX()) / wegx;
+            lambda = (p.getX() - aktPosition.getX()) / wegx;
         } else {
-            lambda = (p.getY() - ap.getY()) / wegy;
+            lambda = (p.getY() - aktPosition.getY()) / wegy;
         }
         return lambda > 0;
+    }
+
+    public void onDraw(Canvas canvas, float scale) {
+        oldpath.reset();
+        destpath.reset();
+        canvas.save();
+        float mScale = scale / ViewRadarBasisBild.RADARRINGE;
+        float aktPosX = (float) aktPosition.getX() * mScale;
+        float aktPosY = (float) aktPosition.getY() * mScale;
+        float startPosX = (float) startPosition.getX() * mScale;
+        float startPosY = (float) startPosition.getY() * mScale;
+        float nextPosX =
+                (float) (aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                        .getX()) * scale);
+        float nextPosY =
+                (float) (aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                        .getY() * scale));
+        onDrawPosition(canvas, aktPosX, -aktPosY);
+        oldpath.moveTo(aktPosX, -aktPosY);
+        oldpath.lineTo(startPosX, -startPosY);
+        canvas.drawPath(oldpath, dottedLine);
+        destpath.moveTo(aktPosX, -aktPosY);
+        destpath.lineTo(nextPosX, -nextPosY);
+        canvas.drawPath(destpath, normalLine);
+        canvas.restore();
+    }
+
+    /**
+     * Zeichnet einen Kreis an die aktuelle Position.
+     *
+     * @param canvas
+     *         Canvas, auf den gezeichnet wird.
+     */
+    public void onDrawPosition(Canvas canvas, float posX, float posY) {
+        canvas.drawCircle(posX, posY, 40f, normalLine);
     }
 
     /**
@@ -471,157 +529,20 @@ public class Kurslinie extends Gerade2D {
         w = getWinkelRechtweisendNord();
         l = getWegLaenge();
         return ("Winkel: " + rundeWert(w) + " , Laenge: " + rundeWert(
-                l) + ", Geschwindigkeit: " + rundeWert(geschwindigkeit) + ", Von: " + sp
-                .toString() + "Akt: " + ap.toString() + " N:" + getNormalenvektor()
+                l) + ", Geschwindigkeit: " + rundeWert(geschwindigkeit) + ", Von: " + startPosition
+                .toString() + "Akt: " + aktPosition.toString() + " N:" + getNormalenvektor()
                 .toString() + " B: " + getRichtungsvektor().toString() + "\n");
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeParcelable(this.ap, flags);
-        dest.writeParcelable(this.sp, flags);
+        dest.writeParcelable(this.aktPosition, flags);
+        dest.writeParcelable(this.startPosition, flags);
         dest.writeDouble(this.winkel);
         dest.writeDouble(this.weglaenge);
         dest.writeDouble(this.geschwindigkeit);
         dest.writeDouble(this.intervall);
         dest.writeParcelable(this.richtungsvektor, flags);
-    }
-
-    /**
-     * Zeichnet eine Kurslinie
-     *
-     * @author Alexander Winkler
-     */
-    public class Draw implements Konstanten {
-        private final Path path = new Path();
-        private Punkt2D endpunkt;
-        private Paint paint;
-        private Punkt2D startpunkt;
-
-        /**
-         * Zeichnet eine Kurslinie. Kurslinie beginnt im aktuellen Punkt und endet auf dem
-         * aussersten Raster
-         *
-         * @param paint
-         *         Paint-Parameter. Wird nicht veraendert
-         * @param rastergroesse
-         *         Groesse des Radarrasters.
-         * @param fahrtrichtung
-         *         true: Zeichnet die Linie vom aktuellen Punkt zum in Fahrtrichtung gelegenen
-         *         Raster false: Zeichnet die Linie vom aktuellen Punkt zum in gegensaetzlicher
-         *         Fahrtrichtung gelegenen Raster
-         */
-        public Draw(Paint paint, int rastergroesse, float scale, boolean fahrtrichtung) {
-            this.paint = new Paint(paint);
-            Punkt2D von, nach;
-            Punkt2D[] erg = getSchnittpunkt(new Kreis2D(new Punkt2D(0, 0), rastergroesse));
-            double delta1 = getEntfernung(erg[0]);
-            double delta2 = getEntfernung(erg[1]);
-            if (delta1 >= delta2) {
-                von = erg[1];
-                nach = erg[0];
-            } else {
-                von = erg[0];
-                nach = erg[1];
-            }
-            if (!isPunktInFahrtrichtung(nach)) {
-                Punkt2D t = von;
-                von = nach;
-                nach = t;
-            }
-            if (fahrtrichtung) {
-                endpunkt = nach;
-            } else {
-                endpunkt = von;
-            }
-            startpunkt = ap;
-            initPath(scale);
-        }
-
-        /**
-         * Zeichnet eine Kurslinie. Kurslinie beginnt und endet jeweils auf den aussersten Rastern.
-         *
-         * @param paint
-         *         Paint-Parameter. Wird nicht veraendert
-         * @param rastergroesse
-         *         Groesse des Radarrasters.
-         */
-        public Draw(int rastergroesse, float scale, Paint paint) {
-            this.paint = new Paint(paint);
-            Punkt2D[] erg = getSchnittpunkt(new Kreis2D(new Punkt2D(0, 0), rastergroesse));
-            if (erg != null) {
-                startpunkt = erg[0];
-                endpunkt = erg[1];
-                initPath(scale);
-            }
-        }
-
-        /**
-         * Zeichnet eine Kurslinie vom beim Initalisieren der Kursline genannten Startpunkt zum
-         * aktuellen Punkt.
-         *
-         * @param paint
-         *         Paint-Parameter. Wird nicht veraendert
-         */
-        public Draw(Paint paint, float scale) {
-            this.paint = new Paint(paint);
-            endpunkt = ap;
-            startpunkt = sp;
-            initPath(scale);
-        }
-
-        /**
-         * Zeichne die Linie Fett.
-         */
-        public void drawFett() {
-            paint.setStrokeWidth(zeichnelagefett);
-        }
-
-        /**
-         * Zeichne die Linie Normal.
-         */
-        public void drawNormal() {
-            paint.setStrokeWidth(zeichnelagenormal);
-        }
-
-        /**
-         *
-         */
-        public void initPath(float scale) {
-            float x1 = (float) startpunkt.getX() * scale;
-            float y1 = -(float) startpunkt.getY() * scale;
-            if (endpunkt != null) {
-                float x2 = (float) endpunkt.getX() * scale;
-                float y2 = -(float) endpunkt.getY() * scale;
-                path.moveTo(x1, y1);
-                path.lineTo(x2, y2);
-            }
-        }
-
-        /**
-         * Zeichnet die Kurslinie
-         *
-         * @param canvas
-         *         Canvas, auf den gezeichnet wird.
-         */
-        public void onDrawLine(Canvas canvas) {
-            canvas.drawPath(path, paint);
-        }
-
-        /**
-         * Zeichnet einen Kreis an die aktuelle Position.
-         *
-         * @param canvas
-         *         Canvas, auf den gezeichnet wird.
-         * @param minutes
-         *         Zeitpunkt, der markiert werden soll.
-         */
-        public void onDrawPosition(Canvas canvas, float scale, int minutes) {
-            Punkt2D pos = getPunktinFahrtrichtungnachDauer(getAp(), minutes);
-            float cx = (float) pos.getX() * scale;
-            float cy = (float) pos.getY() * scale;
-            canvas.drawCircle(cx, -cy, 0.1f, paint);
-        }
     }
 }

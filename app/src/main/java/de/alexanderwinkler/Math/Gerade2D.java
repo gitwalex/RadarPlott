@@ -33,7 +33,7 @@ public class Gerade2D implements Parcelable {
      */
     public Gerade2D(Punkt2D von, Punkt2D nach) {
         /*
-		 * Festlegung einer Gerade2D durch zwei Punkte
+         * Festlegung einer Gerade2D durch zwei Punkte
 		 */
         this(von, nach, new Vektor2D(von, nach));
     }
@@ -48,7 +48,7 @@ public class Gerade2D implements Parcelable {
      */
     public Gerade2D(Punkt2D von, Vektor2D v) {
         /*
-		 * Festlegung einer Gerade2D durch einen Punkt von und dem
+         * Festlegung einer Gerade2D durch einen Punkt von und dem
 		 * Richtungsvektor v
 		 */
         this(von, new Punkt2D(von.getX() + v.getEndpunkt().getX(),
@@ -59,9 +59,9 @@ public class Gerade2D implements Parcelable {
      * Standardkonstruktor fuer eine Gerade, in den jeweiligen Konstruktoren werden die Werte
      * belegt
      *
-     * @param von
-     *         , nach Punkte, durch die die Gerade laeuft
-     * @param Richtungsvektor
+     * @param von,
+     *         nach Punkte, durch die die Gerade laeuft
+     * @param richtung
      *         der Geraden
      */
     private Gerade2D(Punkt2D von, Punkt2D nach, Vektor2D richtung) {
