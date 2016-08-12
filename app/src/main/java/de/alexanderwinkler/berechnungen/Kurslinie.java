@@ -1,8 +1,5 @@
 package de.alexanderwinkler.berechnungen;
 
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcel;
 import android.util.Log;
@@ -35,21 +32,8 @@ public class Kurslinie extends Gerade2D implements Konstanten {
             return new Kurslinie[size];
         }
     };
-    private static final Paint dottedLine;
-    private static final Paint normalLine = new Paint();
     /* Startposition, aktuelle Position */
     private static final String LOGTAG = "de.alexanderwinkler";
-
-    static {
-        normalLine.setStrokeWidth(zeichnelagenormal);
-        normalLine.setAntiAlias(true);
-        normalLine.setStyle(Paint.Style.STROKE);
-        normalLine.setColor(colorA);
-        normalLine.setStrokeWidth(zeichnelagefett);
-        dottedLine = new Paint(normalLine);
-        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-    }
-
     /**
      *
      */
@@ -74,13 +58,23 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      */
     protected final double intervall;
-    private final Path oldpath = new Path();
+    private final Path startpath = new Path();
     private final Path destpath = new Path();
     /**
      *
      *
      */
     private final Vektor2D richtungsvektor;
+    private float aktPosX;
+    private float aktPosY;
+    /***
+     * Varieblen fuer Scalierung
+     */
+    private float mLastScale;
+    private float nextPosX;
+    private float nextPosY;
+    private float startPosX;
+    private float startPosY;
 
     /**
      * Erstellt eine Kurslinie anhand zweier (Peil-)Punkte in einem bestimmten Intervall
@@ -146,20 +140,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Zeichne die Linie Fett.
-     */
-    public void drawFett() {
-        normalLine.setStrokeWidth(zeichnelagefett);
-    }
-
-    /**
-     * Zeichne die Linie Normal.
-     */
-    public void drawNormal() {
-        normalLine.setStrokeWidth(zeichnelagenormal);
-    }
-
-    /**
      * Aktueller Standort
      *
      * @return aktueller Standort
@@ -214,6 +194,17 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         }
         // Zeit in Minuten
         return 60 * zeit;
+    }
+
+    public Path getDestPath(float scale) {
+        destpath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        destpath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
+        destpath.moveTo(aktPosX, -aktPosY);
+        destpath.lineTo(nextPosX, -nextPosY);
+        return destpath;
     }
 
     /**
@@ -383,6 +374,16 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return v.getWinkelRechtweisendNord();
     }
 
+    public Path getStartPath(float scale) {
+        startpath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        startpath.moveTo(aktPosX, -aktPosY);
+        startpath.lineTo(startPosX, -startPosY);
+        return startpath;
+    }
+
     /**
      * Erster Punkt, der beobachtet/errechnet wurde.
      *
@@ -435,6 +436,19 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return rundeWert(winkel);
     }
 
+    private void initScale(float scale) {
+        mLastScale = scale;
+        float mScale = scale / ViewRadarBasisBild.RADARRINGE;
+        aktPosX = (float) aktPosition.getX() * mScale;
+        aktPosY = (float) aktPosition.getY() * mScale;
+        startPosX = (float) startPosition.getX() * mScale;
+        startPosY = (float) startPosition.getY() * mScale;
+        nextPosX = (float) (aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                .getX()) * scale);
+        nextPosY = (float) (aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                .getY() * scale));
+    }
+
     /**
      * Prueft, ob ein Punkt auf der Kurslinie liegt. Toleranz ist 1E6.
      *
@@ -474,41 +488,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
             lambda = (p.getY() - aktPosition.getY()) / wegy;
         }
         return lambda > 0;
-    }
-
-    public void onDraw(Canvas canvas, float scale) {
-        oldpath.reset();
-        destpath.reset();
-        canvas.save();
-        float mScale = scale / ViewRadarBasisBild.RADARRINGE;
-        float aktPosX = (float) aktPosition.getX() * mScale;
-        float aktPosY = (float) aktPosition.getY() * mScale;
-        float startPosX = (float) startPosition.getX() * mScale;
-        float startPosY = (float) startPosition.getY() * mScale;
-        float nextPosX =
-                (float) (aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                        .getX()) * scale);
-        float nextPosY =
-                (float) (aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                        .getY() * scale));
-        onDrawPosition(canvas, aktPosX, -aktPosY);
-        oldpath.moveTo(aktPosX, -aktPosY);
-        oldpath.lineTo(startPosX, -startPosY);
-        canvas.drawPath(oldpath, dottedLine);
-        destpath.moveTo(aktPosX, -aktPosY);
-        destpath.lineTo(nextPosX, -nextPosY);
-        canvas.drawPath(destpath, normalLine);
-        canvas.restore();
-    }
-
-    /**
-     * Zeichnet einen Kreis an die aktuelle Position.
-     *
-     * @param canvas
-     *         Canvas, auf den gezeichnet wird.
-     */
-    public void onDrawPosition(Canvas canvas, float posX, float posY) {
-        canvas.drawCircle(posX, posY, 40f, normalLine);
     }
 
     /**

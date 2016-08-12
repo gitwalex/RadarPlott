@@ -2,6 +2,7 @@ package de.alexanderwinkler.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
@@ -25,6 +26,19 @@ import de.alexanderwinkler.interfaces.Konstanten;
  */
 public class ViewRadarBasisBild extends View implements Konstanten {
     public final static int RADARRINGE = 9;
+    private static final Paint dottedLine;
+    private static final Paint normalLine = new Paint();
+
+    static {
+        normalLine.setStrokeWidth(zeichnelagenormal);
+        normalLine.setAntiAlias(true);
+        normalLine.setStyle(Paint.Style.STROKE);
+        normalLine.setColor(colorA);
+        normalLine.setStrokeWidth(zeichnelagefett);
+        dottedLine = new Paint(normalLine);
+        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+    }
+
     // haelt den Kontext der View
     private List<Lage> lagelist = new ArrayList<>();
     private Kurslinie mEigeneKurslinie;
@@ -50,7 +64,6 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     public ViewRadarBasisBild(Context context) {
         super(context);
     }
-
     public ViewRadarBasisBild(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -92,7 +105,8 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         int height = getHeight();
         canvas.translate(width / 2, height / 2);
         if (mEigeneKurslinie != null) {
-            mEigeneKurslinie.onDraw(canvas, scale);
+            canvas.drawPath(mEigeneKurslinie.getStartPath(scale), dottedLine);
+            canvas.drawPath(mEigeneKurslinie.getDestPath(scale), normalLine);
         }
         canvas.drawPath(pathRinge, paint);
         for (int winkel = 0; winkel < 360; winkel += 2) {
@@ -156,7 +170,6 @@ public class ViewRadarBasisBild extends View implements Konstanten {
                 float y = event.getY();
                 Punkt2D pos = new Punkt2D(x, y);
                 if (mEigeneKurslinie.isPunktAufKurslinie(pos)) {
-                    mEigeneKurslinie.drawFett();
                     invalidate();
                     return true;
                 }
