@@ -42,7 +42,7 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activitymain);
         FragmentEingabeDaten frg = new FragmentEingabeDaten();
         FragmentErgebnisTexteLage frgErgebnis = new FragmentErgebnisTexteLage();
-        FragmentRadarspinne radar = new FragmentRadarspinne();
+        FragmentRadarSpinne radar = new FragmentRadarSpinne();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.fragradarspinne, radar).
                 add(R.id.navigation_view, frg).

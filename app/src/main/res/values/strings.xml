@@ -65,4 +65,5 @@
     <string name="tabRadarBild">Grafik</string>
     <string name="tabSpinner">Manöver</string>
     <string name="Bearbeiten">Dateneingabe</string>
+    <string name="OK">Ok</string>
 </resources>
