@@ -108,7 +108,7 @@ public class Vektor2D implements Parcelable {
      * @return Vektor mit der Laenge eins und der gleichen Richtung
      */
     public final Vektor2D getEinheitsvektor() {
-        double l = getLaenge();
+        float l = (float) getLaenge();
         return new Vektor2D(new Punkt2D(endpunkt.getX() / l, endpunkt.getY() / l));
     }
 
@@ -160,10 +160,10 @@ public class Vektor2D implements Parcelable {
      *
      * @return Winkel zwischen Vektor und Y-Achse in 360-Grad-Darstellung
      */
-    public final double getWinkelRechtweisendNord() {
+    public final float getWinkelRechtweisendNord() {
         // Achtung - Besonderheit atan2: Koordinaten muessen vertauscht
         // angegeben werden
-        return (450 - Math.toDegrees(Math.atan2(endpunkt.getY(), endpunkt.getX()))) % 360;
+        return (float) ((450 - Math.toDegrees(Math.atan2(endpunkt.getY(), endpunkt.getX()))) % 360);
     }
 
 	/*
@@ -179,7 +179,7 @@ public class Vektor2D implements Parcelable {
      */
     public final double length() {
         /*
-		 * liefert Laenge des Vektors zurueck (Satz des Phytagoras)
+         * liefert Laenge des Vektors zurueck (Satz des Phytagoras)
 		 */
         return Math.hypot(endpunkt.getX(), endpunkt.getY());
     }

@@ -50,7 +50,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     private Path pathSektor = new Path();
     private Path pathSektorLinie10Grad = new Path();
     private Path pathSektorLinie2Grad = new Path();
-    private int scale;
+    private float scale;
     private float sektorlinienlaenge = 40.0f;
 
     {
@@ -64,6 +64,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     public ViewRadarBasisBild(Context context) {
         super(context);
     }
+
     public ViewRadarBasisBild(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -84,7 +85,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
             // Alle 2 Grad: halbe sektorlinienlaenge
             // Alle 10 Grad: sektorlinienlaenge
             // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
-            pathSektor.moveTo(0, 0);
+            pathSektor.moveTo(0, -innerScale);
             pathSektor.lineTo(0, innerScale);
             pathSektorLinie10Grad.moveTo(0, startsektorlinie10grad);
             pathSektorLinie10Grad.lineTo(0, endsektorlinie10grad);
@@ -115,38 +116,12 @@ public class ViewRadarBasisBild extends View implements Konstanten {
             } else {
                 if (winkel % 10 == 0) {
                     canvas.drawPath(pathSektorLinie10Grad, paint);
+                } else {
+                    canvas.drawPath(pathSektorLinie2Grad, paint);
                 }
             }
-            canvas.drawPath(pathSektorLinie2Grad, paint);
             canvas.rotate(2);
         }
-        //        // Zeichnen der Radarkreise
-        //        for (int i = 1; i <= RADARRINGE; i++) {
-        //            float innerScale =  scale * i  / RADARRINGE;
-        //            float startsektorlinie2grad = innerScale - sektorlinienlaenge / 2;
-        //            float endsektorlinie2grad = innerScale + sektorlinienlaenge / 2;
-        //            float startsektorlinie10grad = innerScale - sektorlinienlaenge;
-        //            float endsektorlinie10grad = innerScale + sektorlinienlaenge;
-        //            canvas.drawCircle(0, 0, innerScale, paint);
-        //            // Festlegen Laenge der sektorlienien auf dem Aussenkreis
-        //            // Alle 2 Grad: halbe sektorlinienlaenge
-        //            // Alle 10 Grad: sektorlinienlaenge
-        //            // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
-        //            for (int winkel = 0; winkel < 360; winkel += 2) {
-        //                if (winkel % 30 == 0) {
-        //                    // Berechnen und Zeichnen der Sektorenlinien - Abstand 30 Grad, Linie ab Nullpunkt
-        //                    canvas.drawLine(0, 0, 0, innerScale, paint);
-        //                } else {
-        //                    if (winkel % 10 == 0) {
-        //                        // Berechnen und zeichnen der Linien - Abstand 10 Grad
-        //                        canvas.drawLine(0, startsektorlinie10grad, 0, endsektorlinie10grad, paint);
-        //                    }
-        //                }
-        //                // Berechnen der Linien - Abstand 2 Grad
-        //                canvas.drawLine(0, startsektorlinie2grad, 0, endsektorlinie2grad, paint);
-        //                canvas.rotate(2);
-        //            }
-        //        }
         canvas.restore();
     }
 

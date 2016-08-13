@@ -25,17 +25,17 @@ import de.alexanderwinkler.views.ViewRadarBasisBild;
 public class FragmentRadarSpinne extends Fragment implements View.OnClickListener {
     private static final String FAHRT = "FAHRT", KURS = "KURS", INTERVALL = "INTERVALL";
     private Punkt2D aktPositionEigSchiff = new Punkt2D(0, 0);
-    private double mFahrt;
-    private double mIntervall;
-    private double mKurs;
+    private float mFahrt;
+    private float mIntervall;
+    private float mKurs;
     private ViewRadarBasisBild mRadarSpinne;
     private TextView tvEigKurs, tvEigFahrt, tvIntervall;
 
-    private void initEigKurslinie(double kurs, double fahrt, double intervall) {
+    private void initEigKurslinie(float kurs, float fahrt, float intervall) {
         mKurs = kurs;
         mFahrt = fahrt;
         mIntervall = intervall;
-        double distanz = mFahrt / mIntervall;
+        float distanz = mFahrt / mIntervall;
         Punkt2D startPosition = aktPositionEigSchiff.mitWinkel(-distanz, mKurs);
         Kurslinie eigeneKurslinie = new Kurslinie(startPosition, aktPositionEigSchiff, mIntervall);
         tvEigKurs.setText(String.valueOf(mKurs));
@@ -71,9 +71,9 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-            mFahrt = savedInstanceState.getDouble(FAHRT);
-            mKurs = savedInstanceState.getDouble(KURS);
-            mIntervall = savedInstanceState.getDouble(INTERVALL);
+            mFahrt = savedInstanceState.getFloat(FAHRT);
+            mKurs = savedInstanceState.getFloat(KURS);
+            mIntervall = savedInstanceState.getFloat(INTERVALL);
         } else {
             // Defaultbelegung: Fahrt 6 Knoten, Kurs 0 Grad, Intervall 6 Minuten
             mFahrt = 12;
@@ -118,18 +118,18 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
                     setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            double kurs = 0, fahrt = 0, intervall = 0;
+                            float kurs = 0, fahrt = 0, intervall = 0;
                             String sKurs = eKurs.getText().toString();
                             if (!TextUtils.isEmpty(sKurs)) {
-                                kurs = Double.parseDouble(sKurs);
+                                kurs = Float.parseFloat(sKurs);
                             }
                             String sFahrt = eFahrt.getText().toString();
                             if (!TextUtils.isEmpty(sFahrt)) {
-                                fahrt = Double.parseDouble(sFahrt);
+                                fahrt = Float.parseFloat(sFahrt);
                             }
                             String sIntervall = eIntervall.getText().toString();
                             if (!TextUtils.isEmpty(sIntervall)) {
-                                intervall = Double.parseDouble(sIntervall);
+                                intervall = Float.parseFloat(sIntervall);
                             }
                             if (intervall != 0) {
                                 mFragmentRadarSpinne.initEigKurslinie(kurs, fahrt, intervall);

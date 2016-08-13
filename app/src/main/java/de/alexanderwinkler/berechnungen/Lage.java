@@ -22,8 +22,8 @@ public class Lage implements Konstanten, Serializable {
      */
     private static final long serialVersionUID = 1L;
     public Kurslinie a, b0, b1, b2, cpa;
-    protected double eEigKurs, eEigFahrt, eIntervall, rasp1, eDistanz1, rasp2, eDistanz2;
-    protected double[] eingabewerte;
+    protected float eEigKurs, eEigFahrt, eIntervall, rasp1, eDistanz1, rasp2, eDistanz2;
+    protected float[] eingabewerte;
     protected Boolean northup;
     protected Punkt2D pos1_a, pos2_a, pos0_b, pos1_b, pos2_b;
     /**
@@ -46,7 +46,7 @@ public class Lage implements Konstanten, Serializable {
      *         Position A bei zweiter Peilung - Position B bei erster Peilung - Wahre Position B bei
      *         erster Peilung - Position B bei zweiter Peilung
      */
-    public Lage(boolean northup, double intervall, Punkt2D... punkt) {
+    public Lage(boolean northup, float intervall, Punkt2D... punkt) {
         pos1_a = punkt[0];
         pos2_a = punkt[1];
         pos0_b = punkt[2];
@@ -57,7 +57,7 @@ public class Lage implements Konstanten, Serializable {
         eEigKurs = a.getWinkelRW();
         eIntervall = a.getIntervall();
         eEigFahrt = a.getGeschwindigkeitRounded();
-        Punkt2D p = new Punkt2D(0.0, 0.0);
+        Punkt2D p = new Punkt2D(0, 0);
         Vektor2D v = new Vektor2D(p, pos1_b);
         rasp1 = korrigiereWinkel(v.getWinkelRechtweisendNord() - eEigKurs);
         v = new Vektor2D(p, pos2_b);
@@ -78,7 +78,7 @@ public class Lage implements Konstanten, Serializable {
      *         Zeitpunkt x + intervall -Distanz B zum Zeitpunkt x + Intervall (Seemeilen) - Headup:
      *         Peilungen sind Radarseitenpeilungen (true)
      */
-    public Lage(boolean northup, double... werte) {
+    public Lage(boolean northup, float... werte) {
         eEigKurs = werte[0];
         eEigFahrt = werte[1];
         eIntervall = werte[2];
@@ -100,7 +100,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Winkel im Intervall [0..360]
      */
-    public static double korrigiereWinkel(double winkel) {
+    public static float korrigiereWinkel(float winkel) {
         while (winkel > 360) {
             winkel -= 360;
         }
@@ -116,7 +116,7 @@ public class Lage implements Konstanten, Serializable {
      * @param intervall
      *         zwischen zwei Peilungen
      */
-    public final void berechneKurslinien(double intervall) {
+    public final void berechneKurslinien(float intervall) {
         // Kurslinie A aus zwei Werten
         a = new Kurslinie(pos1_a, pos2_a, intervall);
         // Kurslinie A im Verhaeltnis zur Kurslinie B
@@ -148,7 +148,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Dauer bis zum passieren der Kurslinie (in Minuten)
      */
-    public Double getBCT() {
+    public float getBCT() {
         Punkt2D p = a.getSchnittpunkt(b2);
         return b2.getDauer(p);
     }
@@ -201,7 +201,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return wahren Kurs B
      */
-    public Double getKB() {
+    public float getKB() {
         return b1.getWinkelRW();
     }
 
@@ -210,7 +210,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relativer Kurs B rechtweisend
      */
-    public Double getKBr() {
+    public float getKBr() {
         return b2.getWinkelRW();
     }
 
@@ -228,9 +228,9 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return rechtweisende Peilung zum CPA
      */
-    public Double getPCPA() {
+    public float getPCPA() {
         Punkt2D p = a.getCPAOrt(b2);
-        Vektor2D v = new Vektor2D(new Punkt2D(0.0, 0.0), p);
+        Vektor2D v = new Vektor2D(new Punkt2D(0, 0), p);
         return v.getWinkelRechtweisendNord();
     }
 
@@ -239,9 +239,9 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Seitenpeilung
      */
-    public Double getRASP2() {
-        double angle = new Vektor2D(new Punkt2D(0, 0), b2.aktPosition).getWinkelRechtweisendNord();
-        angle = 360d - a.getWinkelRW() + angle;
+    public float getRASP2() {
+        float angle = new Vektor2D(new Punkt2D(0, 0), b2.aktPosition).getWinkelRechtweisendNord();
+        angle = 360 - a.getWinkelRW() + angle;
         return korrigiereWinkel(angle);
     }
 
@@ -250,8 +250,8 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Seitenpeilung zum CPA
      */
-    public Double getSCPA() {
-        double pcpa = getPCPA();
+    public float getSCPA() {
+        float pcpa = getPCPA();
         return korrigiereWinkel(pcpa - eEigKurs);
     }
 
@@ -260,7 +260,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return Dauer bis CPA (in Minuten)
      */
-    public Double getTCPA() {
+    public float getTCPA() {
         Punkt2D p = a.getCPAOrt(b2);
         return b2.getDauer(p);
     }
@@ -283,7 +283,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relaitve Geschwindigkeit B (in Knoten)
      */
-    public Double getvB() {
+    public float getvB() {
         return b1.getGeschwindigkeitRounded();
     }
 
@@ -292,7 +292,7 @@ public class Lage implements Konstanten, Serializable {
      *
      * @return relative Geschwindigkeit B in Knoten
      */
-    public Double getvBr() {
+    public float getvBr() {
         return b2.getGeschwindigkeitRounded();
     }
 
@@ -301,10 +301,11 @@ public class Lage implements Konstanten, Serializable {
      */
     private void init() {
         // wahre Position a bei erster Peilung
-        pos1_a = new Punkt2D(-(eEigFahrt / (60 / eIntervall) * Math.sin(Math.toRadians(eEigKurs))),
-                -(eEigFahrt / (60 / eIntervall) * Math.cos(Math.toRadians(eEigKurs))));
+        pos1_a = new Punkt2D(
+                (float) (-(eEigFahrt / (60 / eIntervall) * Math.sin(Math.toRadians(eEigKurs)))),
+                (float) (-(eEigFahrt / (60 / eIntervall) * Math.cos(Math.toRadians(eEigKurs)))));
         // wahre Position a bei zweiter Peilung
-        pos2_a = new Punkt2D(0.0, 0.0);
+        pos2_a = new Punkt2D(0, 0);
         // Position b bei erster Peilung
         pos0_b = pos1_a.mitWinkel(eDistanz1, rasp1);
         // wahre Position b bei erster Peilung
@@ -325,7 +326,7 @@ public class Lage implements Konstanten, Serializable {
      * @throws IllegalArgumentException
      *         wenn der gewuenschte CPA durch keine denkbare Kursaenderung erreichbar ist.
      */
-    public Double newCPA(double newcpa) throws IllegalArgumentException {
+    public float newCPA(float newcpa) throws IllegalArgumentException {
         // Ein gewunschter CPA kann durch eine Kursaenderung A erreicht werden.
         // Daher wird aufgrund des newcpa der neue Kurs berechnet, und
         // zurueckgeliefert.
@@ -336,11 +337,11 @@ public class Lage implements Konstanten, Serializable {
         // ist der Punkt zwischen dem aktuellen Punkt B und A. Radius ist die
         // Entfernung zwischen den Punkten /2.
         // Mittelpunkt ermitteln
-        double x = (aktA.getX() + aktB.getX()) / 2;
-        double y = (aktA.getY() + aktB.getY()) / 2;
+        float x = (aktA.getX() + aktB.getX()) / 2;
+        float y = (aktA.getY() + aktB.getY()) / 2;
         Punkt2D mittelpunkt = new Punkt2D(x, y);
         // Radius ist Abstand der Punkte vom Mittelpunkt
-        double abstandA = Math.abs(mittelpunkt.abstand(aktA));
+        float abstandA = Math.abs(mittelpunkt.abstand(aktA));
         // Kreis aufspannen
         Kreis2D k1 = new Kreis2D(mittelpunkt, abstandA);
         // Kreis um neuen CPA aufspannen
@@ -352,11 +353,11 @@ public class Lage implements Konstanten, Serializable {
             throw new IllegalArgumentException(
                     "Keine CPA-Berechnung moeglich. CPA nicht erreichbar!.");
         }
-        double newKursA, delta1 = 0, delta2 = 0;
+        float newKursA, delta1 = 0, delta2 = 0;
         // Neuer Relativkurs B
-        double kursB = b2.getWinkelRW();
+        float kursB = b2.getWinkelRW();
         Vektor2D v = new Vektor2D(b2.getAktPosition(), erg[0]);
-        double delta = v.getWinkelRechtweisendNord() - kursB;
+        float delta = v.getWinkelRechtweisendNord() - kursB;
         if (delta < 0) {
             delta1 = delta;
         } else {

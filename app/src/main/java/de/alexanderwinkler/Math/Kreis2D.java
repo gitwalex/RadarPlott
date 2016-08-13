@@ -25,7 +25,7 @@ public class Kreis2D implements Parcelable {
      */
     // Mittelpunkt und Radius des Kreise
     final private Punkt2D mittelpunkt;
-    final private double radius;
+    final private float radius;
 
     /**
      * Erstellt einen Einheitskreis mit dem Radius 1 um den Nullpunkt des Koordinatensystems
@@ -45,14 +45,14 @@ public class Kreis2D implements Parcelable {
      * @param radius
      *         Radius des Kreises
      */
-    public Kreis2D(Punkt2D mittelpunkt, double radius) {
+    public Kreis2D(Punkt2D mittelpunkt, float radius) {
         this.mittelpunkt = new Punkt2D(mittelpunkt.getX(), mittelpunkt.getY());
         this.radius = radius;
     }
 
     protected Kreis2D(Parcel in) {
         this.mittelpunkt = in.readParcelable(Punkt2D.class.getClassLoader());
-        this.radius = in.readDouble();
+        this.radius = in.readFloat();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Kreis2D implements Parcelable {
      *
      * @return Radius
      */
-    public final double getRadius() {
+    public final float getRadius() {
         return radius;
     }
 
@@ -87,7 +87,7 @@ public class Kreis2D implements Parcelable {
      * @return Array mit den Beruehrpunkten. Ist null, wenn der Bezugspunkt im Kreis liegt
      */
     public final Punkt2D[] getTangente(Punkt2D bezugspunkt) {
-        double a, b, c, a1, a2, a3;
+        float a, b, c, a1, a2, a3;
         Punkt2D[] p = new Punkt2D[2];
         /*
 		 * liefert die Beruehrpunkte zweier Tangenten an den Kreis zuruek, die
@@ -104,18 +104,18 @@ public class Kreis2D implements Parcelable {
             return p;
         }
         a = radius;
-        c = Math.hypot(mittelpunkt.getX() - bezugspunkt.getX(),
+        c = (float) Math.hypot(mittelpunkt.getX() - bezugspunkt.getX(),
                 mittelpunkt.getY() - bezugspunkt.getY());
-        b = Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2));
-        a1 = Math.atan2(bezugspunkt.getX() - mittelpunkt.getX(),
+        b = (float) Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2));
+        a1 = (float) Math.atan2(bezugspunkt.getX() - mittelpunkt.getX(),
                 bezugspunkt.getY() - mittelpunkt.getY());
-        a2 = Math.asin(b / c);
+        a2 = (float) Math.asin(b / c);
         a3 = a1 - a2;
-        p[0] = new Punkt2D((Math.sin(a3) * a) + mittelpunkt.getX(),
-                (Math.cos(a3) * a) + mittelpunkt.getY());
+        p[0] = new Punkt2D((float) ((Math.sin(a3) * a) + mittelpunkt.getX()),
+                (float) ((Math.cos(a3) * a) + mittelpunkt.getY()));
         a3 = a1 + a2;
-        p[1] = new Punkt2D((Math.sin(a3) * a) + mittelpunkt.getX(),
-                (Math.cos(a3) * a) + mittelpunkt.getY());
+        p[1] = new Punkt2D((float) ((Math.sin(a3) * a) + mittelpunkt.getX()),
+                (float) ((Math.cos(a3) * a) + mittelpunkt.getY()));
         return p;
     }
 
@@ -160,9 +160,9 @@ public class Kreis2D implements Parcelable {
      * @return false, wenn es keinen Schnittpunkt gibt, ansonsten true
      */
     public final Punkt2D[] schnittpunkt(Kreis2D k) {
-        double r1 = getRadius();
-        double r2 = k.getRadius();
-        double d = k.getMittelpunkt().abstand(getMittelpunkt());
+        float r1 = getRadius();
+        float r2 = k.getRadius();
+        float d = k.getMittelpunkt().abstand(getMittelpunkt());
         /*
 		 * ist der Abstand der beiden Punkte groesser als die Summe der Radien,
 		 * gibt es keinen Schnittpunkt.
@@ -183,19 +183,19 @@ public class Kreis2D implements Parcelable {
 		 * voneinander abgezogen werden
 		 */
         // Mittelpunkte merken
-        double p1 = getMittelpunkt().getX();
-        double p2 = getMittelpunkt().getY();
-        double m1 = k.getMittelpunkt().getX();
-        double m2 = k.getMittelpunkt().getY();
+        float p1 = getMittelpunkt().getX();
+        float p2 = getMittelpunkt().getY();
+        float m1 = k.getMittelpunkt().getX();
+        float m2 = k.getMittelpunkt().getY();
         // Loesung von hier: http://www.c-plusplus.de/forum/201202-full
-        double dx = m1 - p1;
-        double dy = m2 - p2;
-        double a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
-        double h = Math.sqrt(r1 * r1 - a * a);
-        double sp1x = p1 + (a / d) * dx - (h / d) * dy; // Schnittpunkt 1
-        double sp1y = p2 + (a / d) * dy + (h / d) * dx;
-        double sp2x = p1 + (a / d) * dx + (h / d) * dy; // Schnittpinkt 2
-        double sp2y = p2 + (a / d) * dy - (h / d) * dx;
+        float dx = m1 - p1;
+        float dy = m2 - p2;
+        float a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+        float h = (float) Math.sqrt(r1 * r1 - a * a);
+        float sp1x = p1 + (a / d) * dx - (h / d) * dy; // Schnittpunkt 1
+        float sp1y = p2 + (a / d) * dy + (h / d) * dx;
+        float sp2x = p1 + (a / d) * dx + (h / d) * dy; // Schnittpinkt 2
+        float sp2y = p2 + (a / d) * dy - (h / d) * dx;
         Punkt2D[] e = new Punkt2D[2];
         e[0] = new Punkt2D(sp1x, sp1y);
         e[1] = new Punkt2D(sp2x, sp2y);

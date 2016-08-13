@@ -21,17 +21,17 @@ public class Punkt2D implements Parcelable {
     /**
      *
      */
-    private double x;
-    private double y;
+    private float x;
+    private float y;
 
     /**
      * Erstellt einen Punkt im Nullpunkt eines 2D-Koordinatensystems
      */
     public Punkt2D() {
         /*
-		 * Nullpunkt
+         * Nullpunkt
 		 */
-        this(0d, 0d);
+        this(0, 0);
     }
 
     /**
@@ -42,9 +42,9 @@ public class Punkt2D implements Parcelable {
      * @param y
      *         Punkt auf der Y-Achse
      */
-    public Punkt2D(double x, double y) {
+    public Punkt2D(float x, float y) {
         /*
-		 * Legt einen Punkt mit den Koordinaten (x , y) an
+         * Legt einen Punkt mit den Koordinaten (x , y) an
 		 */
         this.setX(x);
         this.setY(y);
@@ -65,8 +65,8 @@ public class Punkt2D implements Parcelable {
     }
 
     protected Punkt2D(Parcel in) {
-        this.x = in.readDouble();
-        this.y = in.readDouble();
+        this.x = in.readFloat();
+        this.y = in.readFloat();
     }
 
     /**
@@ -77,13 +77,13 @@ public class Punkt2D implements Parcelable {
      *
      * @return Abstand der beiden Punkte
      */
-    public final double abstand(Punkt2D p) {
+    public final float abstand(Punkt2D p) {
         /*
 		 * Anwendung Satz des Phytagoras
 		 */
-        double a = (p.x - x) * (p.x - x);
-        double b = (p.y - y) * (p.y - y);
-        return Math.sqrt(a + b);
+        float a = (p.x - x) * (p.x - x);
+        float b = (p.y - y) * (p.y - y);
+        return (float) Math.sqrt(a + b);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Punkt2D implements Parcelable {
                 .doubleToLongBits(y) == Double.doubleToLongBits(other.y);
     }
 
-    public double getPeilung(Punkt2D p) {
+    public float getPeilung(Punkt2D p) {
         Vektor2D v = new Vektor2D(this, p);
         return v.getWinkelRechtweisendNord();
     }
@@ -117,7 +117,7 @@ public class Punkt2D implements Parcelable {
      *
      * @return X-Koordinate des Punktes
      */
-    public final double getX() {
+    public final float getX() {
         return x;
     }
 
@@ -126,7 +126,7 @@ public class Punkt2D implements Parcelable {
      *
      * @return Y-Koordinate des Punktes
      */
-    public final double getY() {
+    public final float getY() {
         return y;
     }
 
@@ -159,8 +159,8 @@ public class Punkt2D implements Parcelable {
      * @return neuer Punkt
      */
     public final Punkt2D mitWinkel(double distanz, double winkel) {
-        return new Punkt2D(x + distanz * Math.sin(Math.toRadians(winkel)),
-                y + distanz * Math.cos(Math.toRadians(winkel)));
+        return new Punkt2D((float) (x + distanz * Math.sin(Math.toRadians(winkel))),
+                (float) (y + distanz * Math.cos(Math.toRadians(winkel))));
     }
 
     /**
@@ -169,7 +169,7 @@ public class Punkt2D implements Parcelable {
      * @param x
      *         neue X-Koordinate des Punktes
      */
-    private void setX(double x) {
+    private void setX(float x) {
         this.x = x;
     }
 
@@ -179,7 +179,7 @@ public class Punkt2D implements Parcelable {
      * @param y
      *         neue Y-Koordinate des Punktes
      */
-    private void setY(double y) {
+    private void setY(float y) {
         this.y = y;
     }
 

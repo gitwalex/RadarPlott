@@ -18,10 +18,10 @@ public class Gerade2D implements Parcelable {
     /* Richtungsvektor rv und Normalenektor nv der Geraden */
     private final Vektor2D rv, nv;
     // Gerade2D ax + by +c = 0
-    private final double a, b, c;
+    private final float a, b, c;
     // Gerade2D Punkt2D_A + lambda * Richtungsvektor
     // Gerade2D y = mx + n
-    private final double m, n;
+    private final float m, n;
 
     /**
      * Erstellt eine Gerade durch zwei Punkte
@@ -72,15 +72,15 @@ public class Gerade2D implements Parcelable {
             throw new IllegalArgumentException(
                     "Die Basispunkte einer Gerade " + "duerfen nicht identisch sein");
         }
-        double x1 = von.getX();
-        double y1 = von.getY();
-        double x2 = nach.getX();
-        double y2 = nach.getY();
+        float x1 = von.getX();
+        float y1 = von.getY();
+        float x2 = nach.getX();
+        float y2 = nach.getY();
         punkt1 = von;
         punkt2 = nach;
         rv = richtung.getEinheitsvektor();
-        double dx = x2 - x1;
-        double dy = y2 - y1;
+        float dx = x2 - x1;
+        float dy = y2 - y1;
         a = -dy;
         b = dx;
         c = -(x1 * a + y1 * b);
@@ -89,8 +89,8 @@ public class Gerade2D implements Parcelable {
             m = (y2 - y1) / (x2 - x1);
             n = y1 - x1 * m;
         } else {
-            m = Double.NaN;
-            n = Double.NaN;
+            m = Float.NaN;
+            n = Float.NaN;
         }
     }
 
@@ -99,11 +99,11 @@ public class Gerade2D implements Parcelable {
         this.punkt2 = in.readParcelable(Punkt2D.class.getClassLoader());
         this.rv = in.readParcelable(Vektor2D.class.getClassLoader());
         this.nv = in.readParcelable(Vektor2D.class.getClassLoader());
-        this.a = in.readDouble();
-        this.b = in.readDouble();
-        this.c = in.readDouble();
-        this.m = in.readDouble();
-        this.n = in.readDouble();
+        this.a = in.readFloat();
+        this.b = in.readFloat();
+        this.c = in.readFloat();
+        this.m = in.readFloat();
+        this.n = in.readFloat();
     }
 
     @Override
@@ -167,9 +167,9 @@ public class Gerade2D implements Parcelable {
      * @return Punkt auf der Gerade, der senkrecht zum uebergebenen Punkt liegt.
      */
     public Punkt2D getLotpunkt(Punkt2D p) {
-        double abstand = getAbstand(p);
-        double q1 = p.getX() + nv.getEndpunkt().getX() * abstand;
-        double q2 = p.getY() + nv.getEndpunkt().getY() * abstand;
+        float abstand = (float) getAbstand(p);
+        float q1 = p.getX() + nv.getEndpunkt().getX() * abstand;
+        float q2 = p.getY() + nv.getEndpunkt().getY() * abstand;
         Punkt2D q = new Punkt2D(q1, q2);
         if (!isPunktAufGerade(q)) {
             q1 = p.getX() - nv.getEndpunkt().getX() * abstand;
@@ -214,7 +214,7 @@ public class Gerade2D implements Parcelable {
      *
      * @return true, wenn es zwei Punkte gibt. False, wenn der Punkt auf der Gearden liegt.
      */
-    public boolean getPunkteAufGerade(Punkt2D p, double d, Punkt2D[] erg) {
+    public boolean getPunkteAufGerade(Punkt2D p, float d, Punkt2D[] erg) {
         /*
 		 * gibt die zwei Punkte auf der Gerade zurueck, die einen abstand d von
 		 * p (der nicht auf der Geraden liegt) haben.
@@ -247,7 +247,7 @@ public class Gerade2D implements Parcelable {
      */
     public Punkt2D getSchnittpunkt(Gerade2D g) {
         // liefert den Schnittpunkt zweier Geraden
-        double x, y;
+        float x, y;
         if (g.a != 0) {
             y = (a / g.a * g.c - c) / (b - a / g.a * g.b);
             x = (g.b * y + g.c) / (-g.a);
@@ -276,30 +276,30 @@ public class Gerade2D implements Parcelable {
         Punkt2D[] v = new Punkt2D[2];
         v[0] = null;
         v[1] = null;
-        double r = k.getRadius();
-        double m1 = k.getMittelpunkt().getX();
-        double m2 = k.getMittelpunkt().getY();
+        float r = k.getRadius();
+        float m1 = k.getMittelpunkt().getX();
+        float m2 = k.getMittelpunkt().getY();
         if ((Math.round(b * 1E6)) / 1E6 != 0) {
-            double s = -b * m2 - c;
-            double t = (b * b * m1 + s * a) / (a * a + b * b);
-            double z1 = r * r * b * b - b * b * m1 * m1 - s * s;
-            double z2 = a * a + b * b;
-            double z3 = t * t;
-            double z4 = z1 / z2 + z3;
-            double zwischenergebnis = Math.round(z4 * 1000000);
+            float s = -b * m2 - c;
+            float t = (b * b * m1 + s * a) / (a * a + b * b);
+            float z1 = r * r * b * b - b * b * m1 * m1 - s * s;
+            float z2 = a * a + b * b;
+            float z3 = t * t;
+            float z4 = z1 / z2 + z3;
+            float zwischenergebnis = Math.round(z4 * 1000000);
             if (zwischenergebnis >= 0) {
-                zwischenergebnis = Math.sqrt(zwischenergebnis / 1000000);
+                zwischenergebnis = (float) Math.sqrt(zwischenergebnis / 1000000);
                 zwischenergebnis = -zwischenergebnis;
-                double x = zwischenergebnis + t;
+                float x = zwischenergebnis + t;
                 v[0] = new Punkt2D(x, (-c - a * x) / b);
                 x = -zwischenergebnis + t;
                 v[1] = new Punkt2D(x, (-c - a * x) / b);
             }
         } else {
-            double x = c / a;
-            double y = m2 + Math.sqrt(r * r - Math.pow(c / a - m1, 2));
+            float x = c / a;
+            float y = (float) (m2 + Math.sqrt(r * r - Math.pow(c / a - m1, 2)));
             v[0] = new Punkt2D(x, y);
-            y = m2 - Math.sqrt(r * r - Math.pow(c / a - m1, 2));
+            y = (float) (m2 - Math.sqrt(r * r - Math.pow(c / a - m1, 2)));
             v[1] = new Punkt2D(x, y);
         }
         return v;

@@ -45,19 +45,19 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     /**
      *
      */
-    protected final double winkel;
+    protected final float winkel;
     /**
      *
      */
-    protected final double weglaenge;
+    protected final float weglaenge;
     /**
      *
      */
-    protected final double geschwindigkeit;
+    protected final float geschwindigkeit;
     /**
      *
      */
-    protected final double intervall;
+    protected final float intervall;
     private final Path startpath = new Path();
     private final Path destpath = new Path();
     /**
@@ -86,7 +86,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @param intervall
      *         Intervall in Minuten zwischen den Punkten
      */
-    public Kurslinie(Punkt2D von, Punkt2D nach, double intervall) {
+    public Kurslinie(Punkt2D von, Punkt2D nach, float intervall) {
         super(von, nach);
         aktPosition = nach;
         startPosition = von;
@@ -107,14 +107,14 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @param geschwindigkeit
      *         Geschwindigkeit
      */
-    public Kurslinie(Punkt2D von, Vektor2D richtung, double geschwindigkeit) {
+    public Kurslinie(Punkt2D von, Vektor2D richtung, float geschwindigkeit) {
         super(von, richtung);
         aktPosition = von;
         // Startpunkt ist aktueller Punkt abzueglich Richtungsvektor
-        double x1 = von.getX();
-        double y1 = von.getY();
-        double x2 = richtung.getEndpunkt().getX();
-        double y2 = richtung.getEndpunkt().getY();
+        float x1 = von.getX();
+        float y1 = von.getY();
+        float x2 = richtung.getEndpunkt().getX();
+        float y2 = richtung.getEndpunkt().getY();
         startPosition = new Punkt2D(x2 - x1, y2 - y1);
         richtungsvektor = super.getRichtungsvektor();
         winkel = richtungsvektor.getWinkelRechtweisendNord();
@@ -127,10 +127,10 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         super(in);
         this.aktPosition = in.readParcelable(Punkt2D.class.getClassLoader());
         this.startPosition = in.readParcelable(Punkt2D.class.getClassLoader());
-        this.winkel = in.readDouble();
-        this.weglaenge = in.readDouble();
-        this.geschwindigkeit = in.readDouble();
-        this.intervall = in.readDouble();
+        this.winkel = in.readFloat();
+        this.weglaenge = in.readFloat();
+        this.geschwindigkeit = in.readFloat();
+        this.intervall = in.readFloat();
         this.richtungsvektor = in.readParcelable(Vektor2D.class.getClassLoader());
     }
 
@@ -178,16 +178,16 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @throws IllegalArgumentException
      *         (), wenn der Punkt nicht auf der Kurslinie liegt.
      */
-    public double getDauer(Punkt2D p) {
+    public float getDauer(Punkt2D p) {
         if (!isPunktAufGerade(p)) {
             Log.d(LOGTAG, "Fehler bei Kurslinie.getDauer(Punkt p), Parameter: " + p.toString());
             throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
         }
         // Punkt liegt auf Geraden: Abstand berechnen
-        double abstand = aktPosition.abstand(p);
+        float abstand = aktPosition.abstand(p);
         // Dauer berechnen. Absolutwert. Da Geschwindigkeit in Seemeilen
         // gerechnet wird, wird hier die Zeit in Stunden gerechnent.
-        double zeit = Math.abs(abstand / geschwindigkeit);
+        float zeit = Math.abs(abstand / geschwindigkeit);
         if (!isPunktInFahrtrichtung(p)) {
             // Punkt liegt nicht in Fahrtrichtung: Negativer Wert
             zeit = -zeit;
@@ -242,8 +242,8 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      * @return Geschwindigkeit in Knoten
      */
-    public double getGeschwindigkeit() {
-        return (geschwindigkeit);
+    public float getGeschwindigkeit() {
+        return geschwindigkeit;
     }
 
     /**
@@ -251,7 +251,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      * @return Geschwindigkeit in Knoten
      */
-    public double getGeschwindigkeitRounded() {
+    public float getGeschwindigkeitRounded() {
         return rundeWert(geschwindigkeit);
     }
 
@@ -260,7 +260,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      * @return Intervall in Minuten
      */
-    public double getIntervall() {
+    public float getIntervall() {
         return intervall;
     }
 
@@ -278,7 +278,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @throws IllegalArgumentException
      *         (), wenn der Punkt nicht auf der Kurslinie liegt.
      */
-    public Punkt2D getPunktinFahrtrichtung(Punkt2D p, double d) {
+    public Punkt2D getPunktinFahrtrichtung(Punkt2D p, float d) {
         if (!isPunktAufKurslinie(p)) {
             Log.d(LOGTAG,
                     "Fehler bei Kurslinie.getPunktinFahrtRichtung(Punkt p, double d), Parameter: " + p
@@ -286,8 +286,8 @@ public class Kurslinie extends Gerade2D implements Konstanten {
             throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
         }
         Vektor2D v = super.getRichtungsvektor().getEinheitsvektor();
-        double x = p.getX() + d * v.getEndpunkt().getX();
-        double y = p.getY() + d * v.getEndpunkt().getY();
+        float x = p.getX() + d * v.getEndpunkt().getX();
+        float y = p.getY() + d * v.getEndpunkt().getY();
         return new Punkt2D(x, y);
     }
 
@@ -303,7 +303,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @throws IllegalArgumentException
      *         (), wenn kein Punkt im entsprechenden Abstand auf der Kurslinie liegt
      */
-    public Punkt2D getPunktinFahrtrichtungmitAbstand(double abstand) {
+    public Punkt2D getPunktinFahrtrichtungmitAbstand(float abstand) {
         Kreis2D k = new Kreis2D(new Punkt2D(0, 0), abstand);
         Punkt2D[] s = getSchnittpunkt(k);
         if (!isPunktInFahrtrichtung(s[0])) {
@@ -339,17 +339,17 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @throws IllegalArgumentException
      *         (), wenn der Punkt nicht auf der Kurslinie liegt.
      */
-    public Punkt2D getPunktinFahrtrichtungnachDauer(Punkt2D p, double minuten) {
+    public Punkt2D getPunktinFahrtrichtungnachDauer(Punkt2D p, float minuten) {
         if (!isPunktAufKurslinie(p)) {
             Log.d(LOGTAG,
                     "Fehler bei Kurslinie.getPunktinFahrtrichtungnachDauer(Punkt p, double minuten)" + ", Parameter: " + p
                             .toString() + " / " + minuten);
             throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
         }
-        double x = p.getX();
-        double y = p.getY();
-        x = x + richtungsvektor.getEndpunkt().getX() * geschwindigkeit * minuten / 60d;
-        y = y + richtungsvektor.getEndpunkt().getY() * geschwindigkeit * minuten / 60d;
+        float x = p.getX();
+        float y = p.getY();
+        x = x + richtungsvektor.getEndpunkt().getX() * geschwindigkeit * minuten / 60f;
+        y = y + richtungsvektor.getEndpunkt().getY() * geschwindigkeit * minuten / 60f;
         return new Punkt2D(x, y);
     }
 
@@ -432,21 +432,21 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      * @return Kurs in Grad (Degrees)
      */
-    public double getWinkelRW() {
+    public float getWinkelRW() {
         return rundeWert(winkel);
     }
 
     private void initScale(float scale) {
         mLastScale = scale;
         float mScale = scale / ViewRadarBasisBild.RADARRINGE;
-        aktPosX = (float) aktPosition.getX() * mScale;
-        aktPosY = (float) aktPosition.getY() * mScale;
-        startPosX = (float) startPosition.getX() * mScale;
-        startPosY = (float) startPosition.getY() * mScale;
-        nextPosX = (float) (aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                .getX()) * scale);
-        nextPosY = (float) (aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                .getY() * scale));
+        aktPosX = aktPosition.getX() * mScale;
+        aktPosY = aktPosition.getY() * mScale;
+        startPosX = startPosition.getX() * mScale;
+        startPosY = startPosition.getY() * mScale;
+        nextPosX = aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                .getX()) * scale;
+        nextPosY = aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
+                .getY() * scale);
     }
 
     /**
@@ -498,8 +498,8 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      * @return Auf zwei Stellen gerunderter Wert
      */
-    private double rundeWert(double d) {
-        return Math.round(d * 100.0) / 100.0;
+    private float rundeWert(double d) {
+        return (float) (Math.round(d * 100.0) / 100.0);
     }
 
     @Override
