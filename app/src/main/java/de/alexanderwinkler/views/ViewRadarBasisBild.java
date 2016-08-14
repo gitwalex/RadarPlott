@@ -1,11 +1,13 @@
 package de.alexanderwinkler.views;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.alexanderwinkler.Math.Punkt2D;
+import de.alexanderwinkler.R;
 import de.alexanderwinkler.berechnungen.Kurslinie;
 import de.alexanderwinkler.berechnungen.Lage;
 import de.alexanderwinkler.interfaces.Konstanten;
@@ -39,23 +42,22 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
     }
 
+    private Bitmap kompassrose;
     // haelt den Kontext der View
     private List<Lage> lagelist = new ArrayList<>();
     private Kurslinie mEigeneKurslinie;
     private ScaleGestureDetector mScaleDetector;
-    private boolean northupOrientierung;
+    private boolean northupOrientierung = true;
     // Variablen zum Zeichnen
     private Paint paint = new Paint();
-    private Path pathRinge = new Path();
-    private Path pathSektor = new Path();
-    private Path pathSektorLinie10Grad = new Path();
-    private Path pathSektorLinie2Grad = new Path();
     private float scale;
     private float sektorlinienlaenge = 40.0f;
 
     {
         // Holen der Kompassrose
         // Vorbelegungen zum Zeichnen
+        paint.setTextSize(40);
+        paint.setFakeBoldText(true);
         paint.setAntiAlias(true);
         paint.setStyle(Style.STROKE);
         paint.setColor(colorRadarLinien);
@@ -69,55 +71,53 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         super(context, attrs);
     }
 
-    private void initPath() {
-        pathRinge.reset();
-        pathSektor.reset();
-        pathSektorLinie2Grad.reset();
-        pathSektorLinie10Grad.reset();
-        for (int i = 1; i <= RADARRINGE; i++) {
-            float innerScale = scale * i / RADARRINGE;
-            float startsektorlinie2grad = innerScale - sektorlinienlaenge / 2;
-            float endsektorlinie2grad = innerScale + sektorlinienlaenge / 2;
-            float startsektorlinie10grad = innerScale - sektorlinienlaenge;
-            float endsektorlinie10grad = innerScale + sektorlinienlaenge;
-            pathRinge.addCircle(0, 0, innerScale, Path.Direction.CW);
-            // Festlegen Laenge der sektorlienien auf dem Aussenkreis
-            // Alle 2 Grad: halbe sektorlinienlaenge
-            // Alle 10 Grad: sektorlinienlaenge
-            // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
-            pathSektor.moveTo(0, -innerScale);
-            pathSektor.lineTo(0, innerScale);
-            pathSektorLinie10Grad.moveTo(0, startsektorlinie10grad);
-            pathSektorLinie10Grad.lineTo(0, endsektorlinie10grad);
-            // Berechnen der Linien - Abstand 2 Grad
-            pathSektorLinie2Grad.moveTo(0, startsektorlinie2grad);
-            pathSektorLinie2Grad.lineTo(0, endsektorlinie2grad);
-        }
-    }
-
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        // Hintergrundfarbe setzen
-        canvas.drawColor(colorRadarBackground);
-        // Mittelpunkt des Radars liegt in der Mitte des Bildes (Canvas).
         int width = getWidth();
         int height = getHeight();
         canvas.translate(width / 2, height / 2);
+        // Hintergrundfarbe setzen
+        canvas.drawColor(colorRadarBackground);
+        // Mittelpunkt des Radars liegt in der Mitte des Bildes (Canvas).
         if (mEigeneKurslinie != null) {
+            if (!northupOrientierung) {
+                float rotation = mEigeneKurslinie.getWinkelRW();
+                canvas.rotate(-rotation);
+            }
+            canvas.drawBitmap(kompassrose, -kompassrose.getWidth() / 2,
+                    -kompassrose.getHeight() / 2, paint);
             canvas.drawPath(mEigeneKurslinie.getStartPath(scale), dottedLine);
             canvas.drawPath(mEigeneKurslinie.getDestPath(scale), normalLine);
         }
-        canvas.drawPath(pathRinge, paint);
-        for (int winkel = 0; winkel < 360; winkel += 2) {
-            if (winkel % 30 == 0) {
-                canvas.drawPath(pathSektor, paint);
-            } else {
-                if (winkel % 10 == 0) {
-                    canvas.drawPath(pathSektorLinie10Grad, paint);
+        for (int i = 1; i <= RADARRINGE; i++) {
+            float innerScale = scale * i / RADARRINGE;
+            canvas.drawCircle(0, 0, innerScale, paint);
+        }
+        for (int winkel = 0; winkel < 180; winkel += 2) {
+            for (int i = 1; i <= RADARRINGE; i++) {
+                float innerScale = scale * i / RADARRINGE;
+                float startsektorlinie2grad = innerScale - sektorlinienlaenge / 2;
+                float endsektorlinie2grad = innerScale + sektorlinienlaenge / 2;
+                float startsektorlinie10grad = innerScale - sektorlinienlaenge;
+                float endsektorlinie10grad = innerScale + sektorlinienlaenge;
+                // Festlegen Laenge der sektorlienien auf dem Aussenkreis
+                // Alle 2 Grad: halbe sektorlinienlaenge
+                // Alle 10 Grad: sektorlinienlaenge
+                // Alle 30 Grad: Linie vom Mittelpunkt zum aeusseren sichtbaren Radarkreis
+                // Berechnen der Linien - Abstand 2 Grad
+                if (winkel % 30 == 0) {
+                    canvas.drawLine(0, -innerScale, 0, innerScale, paint);
                 } else {
-                    canvas.drawPath(pathSektorLinie2Grad, paint);
+                    if (winkel % 10 == 0) {
+                        canvas.drawLine(0, startsektorlinie10grad, 0, endsektorlinie10grad, paint);
+                        canvas.drawLine(0, -startsektorlinie10grad, 0, -endsektorlinie10grad,
+                                paint);
+                    } else {
+                        canvas.drawLine(0, startsektorlinie2grad, 0, endsektorlinie2grad, paint);
+                        canvas.drawLine(0, -startsektorlinie2grad, 0, -endsektorlinie2grad, paint);
+                    }
                 }
             }
             canvas.rotate(2);
@@ -128,13 +128,14 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        Resources res = getContext().getResources();
+        kompassrose = BitmapFactory.decodeResource(res, R.drawable.kompassrose);
         mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         scale = Math.min(h, w) * 2;
-        initPath();
     }
 
     @Override
@@ -158,16 +159,16 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         invalidate();
     }
 
-    public void setNorthUpOrientierung(boolean northupOrientierung) {
-        this.northupOrientierung = northupOrientierung;
+    public boolean toggleNorthUpOrientierung() {
+        northupOrientierung = !northupOrientierung;
         invalidate();
+        return northupOrientierung;
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             scale *= detector.getScaleFactor();
-            initPath();
             invalidate();
             return true;
         }

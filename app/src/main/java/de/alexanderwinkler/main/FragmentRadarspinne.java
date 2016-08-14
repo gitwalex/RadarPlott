@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import de.alexanderwinkler.Math.Punkt2D;
@@ -29,6 +30,7 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
     private float mIntervall;
     private float mKurs;
     private ViewRadarBasisBild mRadarSpinne;
+    private Button mToggleHeadUpBtn;
     private TextView tvEigKurs, tvEigFahrt, tvIntervall;
 
     private void initEigKurslinie(float kurs, float fahrt, float intervall) {
@@ -41,15 +43,25 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
         tvEigKurs.setText(String.valueOf(mKurs));
         tvEigFahrt.setText(String.valueOf(mFahrt));
         tvIntervall.setText(String.valueOf(mIntervall));
-        mRadarSpinne = (ViewRadarBasisBild) getView().findViewById(R.id.view_radarspinne);
         mRadarSpinne.setEigeneKurslinie(eigeneKurslinie);
     }
 
     @Override
     public void onClick(View v) {
-        DialogEigSchiffDaten dlg =
-                DialogEigSchiffDaten.newInstance(this, mKurs, mFahrt, mIntervall);
-        dlg.show(getFragmentManager(), null);
+        switch (v.getId()) {
+            case R.id.llEigSchiffDaten:
+                DialogEigSchiffDaten dlg =
+                        DialogEigSchiffDaten.newInstance(this, mKurs, mFahrt, mIntervall);
+                dlg.show(getFragmentManager(), null);
+                break;
+            case R.id.toggleHeadUp:
+                if (mRadarSpinne.toggleNorthUpOrientierung()) {
+                    mToggleHeadUpBtn.setText(R.string.NorthUp);
+                } else {
+                    mToggleHeadUpBtn.setText(R.string.HeadUp);
+                }
+                break;
+        }
     }
 
     @Nullable
@@ -77,14 +89,17 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
         } else {
             // Defaultbelegung: Fahrt 6 Knoten, Kurs 0 Grad, Intervall 6 Minuten
             mFahrt = 12;
-            mKurs = 182;
+            mKurs = 165;
             mIntervall = 6;
         }
+        mRadarSpinne = (ViewRadarBasisBild) view.findViewById(R.id.view_radarspinne);
         tvEigKurs = (TextView) view.findViewById(R.id.tvEigKurs);
         tvEigFahrt = (TextView) view.findViewById(R.id.tvEigFahrt);
         tvIntervall = (TextView) view.findViewById(R.id.tvIntervall);
         view.findViewById(R.id.llEigSchiffDaten).setOnClickListener(this);
         initEigKurslinie(mKurs, mFahrt, mIntervall);
+        mToggleHeadUpBtn = (Button) view.findViewById(R.id.toggleHeadUp);
+        mToggleHeadUpBtn.setOnClickListener(this);
     }
 
     public static class DialogEigSchiffDaten extends AppCompatDialogFragment {

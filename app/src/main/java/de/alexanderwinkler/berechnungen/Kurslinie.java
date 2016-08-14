@@ -60,6 +60,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     protected final float intervall;
     private final Path startpath = new Path();
     private final Path destpath = new Path();
+    private final Path positionPath = new Path();
     /**
      *
      *
@@ -201,7 +202,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         if (mLastScale != scale) {
             initScale(scale);
         }
-        destpath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
         destpath.moveTo(aktPosX, -aktPosY);
         destpath.lineTo(nextPosX, -nextPosY);
         return destpath;
@@ -262,6 +262,15 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      */
     public float getIntervall() {
         return intervall;
+    }
+
+    public Path getPositionPath(float scale) {
+        positionPath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        positionPath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
+        return positionPath;
     }
 
     /**

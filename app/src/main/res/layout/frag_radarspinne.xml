@@ -76,8 +76,23 @@
 
     </LinearLayout>
 
-    <de.alexanderwinkler.views.ViewRadarBasisBild
-        android:id="@+id/view_radarspinne"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <de.alexanderwinkler.views.ViewRadarBasisBild
+            android:id="@+id/view_radarspinne"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/toggleHeadUp"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="true"
+            android:text="@string/NorthUp"/>
+    </RelativeLayout>
 </LinearLayout>
