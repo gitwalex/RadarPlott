@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
@@ -29,23 +28,11 @@ import de.alexanderwinkler.interfaces.Konstanten;
  */
 public class ViewRadarBasisBild extends View implements Konstanten {
     public final static int RADARRINGE = 9;
-    private static final Paint dottedLine;
-    private static final Paint normalLine = new Paint();
-
-    static {
-        normalLine.setStrokeWidth(zeichnelagenormal);
-        normalLine.setAntiAlias(true);
-        normalLine.setStyle(Paint.Style.STROKE);
-        normalLine.setColor(colorA);
-        normalLine.setStrokeWidth(zeichnelagefett);
-        dottedLine = new Paint(normalLine);
-        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-    }
-
     private Bitmap kompassrose;
     // haelt den Kontext der View
     private List<Lage> lagelist = new ArrayList<>();
     private Kurslinie mEigeneKurslinie;
+    private float mHeadUpRotation;
     private ScaleGestureDetector mScaleDetector;
     private boolean northupOrientierung = true;
     // Variablen zum Zeichnen
@@ -81,16 +68,11 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         // Hintergrundfarbe setzen
         canvas.drawColor(colorRadarBackground);
         // Mittelpunkt des Radars liegt in der Mitte des Bildes (Canvas).
-        if (mEigeneKurslinie != null) {
-            if (!northupOrientierung) {
-                float rotation = mEigeneKurslinie.getWinkelRW();
-                canvas.rotate(-rotation);
-            }
-            canvas.drawBitmap(kompassrose, -kompassrose.getWidth() / 2,
-                    -kompassrose.getHeight() / 2, paint);
-            canvas.drawPath(mEigeneKurslinie.getStartPath(scale), dottedLine);
-            canvas.drawPath(mEigeneKurslinie.getDestPath(scale), normalLine);
+        if (!northupOrientierung) {
+            canvas.rotate(mHeadUpRotation);
         }
+        canvas.drawBitmap(kompassrose, -kompassrose.getWidth() / 2, -kompassrose.getHeight() / 2,
+                paint);
         for (int i = 1; i <= RADARRINGE; i++) {
             float innerScale = scale * i / RADARRINGE;
             canvas.drawCircle(0, 0, innerScale, paint);
@@ -123,6 +105,11 @@ public class ViewRadarBasisBild extends View implements Konstanten {
             canvas.rotate(2);
         }
         canvas.restore();
+        if (mEigeneKurslinie != null) {
+            //            mEigeneKurslinie.drawStartPath(canvas, scale, northupOrientierung);
+            //            mEigeneKurslinie.drawDestPath(canvas, scale, northupOrientierung);
+            mEigeneKurslinie.drawPosition(canvas, scale, northupOrientierung);
+        }
     }
 
     @Override
@@ -156,6 +143,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 
     public void setEigeneKurslinie(Kurslinie kurslinie) {
         this.mEigeneKurslinie = kurslinie;
+        mHeadUpRotation = -mEigeneKurslinie.getWinkelRW();
         invalidate();
     }
 

@@ -23,7 +23,7 @@ import de.alexanderwinkler.views.ViewRadarBasisBild;
 /**
  * Created by alex on 08.08.2016.
  */
-public class FragmentRadarSpinne extends Fragment implements View.OnClickListener {
+public class FragmentRadarspinne extends Fragment implements View.OnClickListener {
     private static final String FAHRT = "FAHRT", KURS = "KURS", INTERVALL = "INTERVALL";
     private Punkt2D aktPositionEigSchiff = new Punkt2D(0, 0);
     private float mFahrt;
@@ -89,7 +89,7 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
         } else {
             // Defaultbelegung: Fahrt 6 Knoten, Kurs 0 Grad, Intervall 6 Minuten
             mFahrt = 12;
-            mKurs = 165;
+            mKurs = 180;
             mIntervall = 6;
         }
         mRadarSpinne = (ViewRadarBasisBild) view.findViewById(R.id.view_radarspinne);
@@ -103,9 +103,9 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
     }
 
     public static class DialogEigSchiffDaten extends AppCompatDialogFragment {
-        private FragmentRadarSpinne mFragmentRadarSpinne;
+        private FragmentRadarspinne mFragmentRadarspinne;
 
-        public static DialogEigSchiffDaten newInstance(FragmentRadarSpinne frag, double kurs,
+        public static DialogEigSchiffDaten newInstance(FragmentRadarspinne frag, double kurs,
                                                        double fahrt, double intervall) {
             Bundle args = new Bundle();
             args.putDouble(KURS, kurs);
@@ -147,14 +147,14 @@ public class FragmentRadarSpinne extends Fragment implements View.OnClickListene
                                 intervall = Float.parseFloat(sIntervall);
                             }
                             if (intervall != 0) {
-                                mFragmentRadarSpinne.initEigKurslinie(kurs, fahrt, intervall);
+                                mFragmentRadarspinne.initEigKurslinie(kurs, fahrt, intervall);
                             }
                         }
                     }).create();
         }
 
-        private void setFragmentRadarSpinne(FragmentRadarSpinne frg) {
-            mFragmentRadarSpinne = frg;
+        private void setFragmentRadarSpinne(FragmentRadarspinne frg) {
+            mFragmentRadarspinne = frg;
         }
     }
 }

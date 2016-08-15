@@ -1,5 +1,8 @@
 package de.alexanderwinkler.berechnungen;
 
+import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcel;
 import android.util.Log;
@@ -34,6 +37,19 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     };
     /* Startposition, aktuelle Position */
     private static final String LOGTAG = "de.alexanderwinkler";
+    private static final Paint dottedLine;
+    private static final Paint normalLine = new Paint();
+
+    static {
+        normalLine.setStrokeWidth(zeichnelagenormal);
+        normalLine.setAntiAlias(true);
+        normalLine.setStyle(Paint.Style.STROKE);
+        normalLine.setColor(colorA);
+        normalLine.setStrokeWidth(zeichnelagefett);
+        dottedLine = new Paint(normalLine);
+        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+    }
+
     /**
      *
      */
@@ -140,6 +156,53 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return 0;
     }
 
+    public void drawDestPath(Canvas canvas, float scale, boolean northUp) {
+        canvas.save();
+        destpath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        canvas.translate(canvas.getWidth() / 2 + aktPosX, canvas.getHeight() / 2 - aktPosY);
+        if (!northUp) {
+            canvas.rotate(-getWinkelRW());
+        }
+        destpath.moveTo(0, 0);
+        destpath.lineTo(nextPosX - aktPosX, -nextPosY - aktPosY);
+        canvas.drawPath(destpath, normalLine);
+        canvas.restore();
+    }
+
+    public void drawPosition(Canvas canvas, float scale, boolean northUp) {
+        canvas.save();
+        positionPath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+        if (!northUp) {
+            canvas.rotate(-getWinkelRW());
+        }
+        positionPath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
+        canvas.drawPath(positionPath, normalLine);
+        canvas.restore();
+    }
+
+    public void drawStartPath(Canvas canvas, float scale, boolean northUp) {
+        canvas.save();
+        startpath.reset();
+        if (mLastScale != scale) {
+            initScale(scale);
+        }
+        canvas.translate(canvas.getWidth() / 2 + aktPosX, canvas.getHeight() / 2 - aktPosY);
+        if (!northUp) {
+            canvas.rotate(-getWinkelRW());
+        }
+        startpath.moveTo(0, 0);
+        startpath.lineTo(startPosX - aktPosX, -startPosY - aktPosX);
+        canvas.drawPath(startpath, dottedLine);
+        canvas.restore();
+    }
+
     /**
      * Aktueller Standort
      *
@@ -197,16 +260,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return 60 * zeit;
     }
 
-    public Path getDestPath(float scale) {
-        destpath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        destpath.moveTo(aktPosX, -aktPosY);
-        destpath.lineTo(nextPosX, -nextPosY);
-        return destpath;
-    }
-
     /**
      * Absolute (damit immer positiv) Entfernung zu einem Punkt.
      *
@@ -262,15 +315,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      */
     public float getIntervall() {
         return intervall;
-    }
-
-    public Path getPositionPath(float scale) {
-        positionPath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        positionPath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
-        return positionPath;
     }
 
     /**
@@ -381,16 +425,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         }
         Vektor2D v = new Vektor2D(getLotpunkt(p));
         return v.getWinkelRechtweisendNord();
-    }
-
-    public Path getStartPath(float scale) {
-        startpath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        startpath.moveTo(aktPosX, -aktPosY);
-        startpath.lineTo(startPosX, -startPosY);
-        return startpath;
     }
 
     /**
