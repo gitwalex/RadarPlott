@@ -21,39 +21,49 @@ public class Lage implements Konstanten, Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-    public Kurslinie a, b0, b1, b2, cpa;
+    public EigenesSchiff a;
+    public GegnerSchiff b0;
+    public GegnerSchiff b1;
+    public GegnerSchiff b2;
+    public GegnerSchiff cpa;
     protected float eEigKurs, eEigFahrt, eIntervall, rasp1, eDistanz1, rasp2, eDistanz2;
-    protected float[] eingabewerte;
     protected Boolean northup;
     protected Punkt2D pos1_a, pos2_a, pos0_b, pos1_b, pos2_b;
-    /**
-     * Im Tag kann eine eindeutiger Tag gespeichert werden.
-     */
-    private String tag;
-
-    public Lage() {
-    }
+    private EigenesSchiff eigenesSchiff;
 
     /**
      * Berechnet aus der Peilung eines Schiffes die aktuelle Lage.
      *
-     * @param northup
+     * @param northUp
      *         true: Peilung erfolgt mit rechtweisend Nord
-     * @param intervall
-     *         Dauer zwischen zwei Peilungen
-     * @param punkt
-     *         Punkt-Array (Reihenfolge beachten) - Wahre Position A bei erster Peilung - Wahre
-     *         Position A bei zweiter Peilung - Position B bei erster Peilung - Wahre Position B bei
-     *         erster Peilung - Position B bei zweiter Peilung
+     * @param seitenpeilung1
+     *         1. Radarseitenpeilung oder Seitenpeilung
+     * @param seitenpeilung2
+     *         2. Radarseitenpeilung oder Seitenpeilung
      */
-    public Lage(boolean northup, float intervall, Punkt2D... punkt) {
-        pos1_a = punkt[0];
-        pos2_a = punkt[1];
-        pos0_b = punkt[2];
-        pos1_b = punkt[3];
-        pos2_b = punkt[4];
+    public Lage(boolean northUp, EigenesSchiff eigenesSchiff, Radarseitenpeilung seitenpeilung1,
+                Radarseitenpeilung seitenpeilung2) {
+        this.eigenesSchiff = eigenesSchiff;
+        pos1_a = eigenesSchiff.getStartPosition();
+        // wahre Position a bei zweiter Peilung
+        pos2_a = eigenesSchiff.getAktPosition();
+        // Position b bei erster Peilung
+        pos0_b = pos1_a.mitWinkel(seitenpeilung1.getDistanz(),
+                seitenpeilung1.getRadarSeitenPeilung());
+        // wahre Position b bei erster Peilung
+        pos1_b = pos2_a.mitWinkel(seitenpeilung2.getDistanz(),
+                seitenpeilung2.getRadarSeitenPeilung());
+        // Position b bei zweiter Peilung
+        pos2_b = pos2_a.mitWinkel(seitenpeilung2.getDistanz(),
+                seitenpeilung2.getRadarSeitenPeilung());
         this.northup = northup;
-        berechneKurslinien(intervall);
+        b0 = new GegnerSchiff(pos0_b, pos1_b, eIntervall);
+        // Wahre EigenesSchiff B
+        b1 = new GegnerSchiff(pos0_b, pos2_b, eIntervall);
+        // Relative EigenesSchiff B nur zwischen den peilungen
+        b2 = new GegnerSchiff(pos1_b, pos2_b, eIntervall);
+        // CPA-Linie
+        cpa = new GegnerSchiff(pos2_a, a.getCPAOrt(b2), eIntervall);
         eEigKurs = a.getWinkelRW();
         eIntervall = a.getIntervall();
         eEigFahrt = a.getGeschwindigkeitRounded();
@@ -64,31 +74,6 @@ public class Lage implements Konstanten, Serializable {
         rasp2 = korrigiereWinkel(v.getWinkelRechtweisendNord() - eEigKurs);
         eDistanz1 = p.abstand(pos1_b);
         eDistanz2 = p.abstand(pos2_b);
-    }
-
-    /**
-     * Berechnet aus der Peilung eines Schiffes die aktuelle Lage.
-     *
-     * @param northup
-     *         true: Peilung erfolgt mit rechtweisend Nord
-     * @param werte
-     *         Double-Array mit folgenden Inhalt (Reihenfolge beachten): - Kurs A (rechtweisend) -
-     *         Fahrt A (in Knoten) - Intervall zwischen zwei Peilungen (Minuten) - Seitenpeilung B
-     *         zum Zeitpunkt x - Distanz B zum Zeitpunkt x (Seemeilen) - Seitenpeilung B zum
-     *         Zeitpunkt x + intervall -Distanz B zum Zeitpunkt x + Intervall (Seemeilen) - Headup:
-     *         Peilungen sind Radarseitenpeilungen (true)
-     */
-    public Lage(boolean northup, float... werte) {
-        eEigKurs = werte[0];
-        eEigFahrt = werte[1];
-        eIntervall = werte[2];
-        rasp1 = werte[5];
-        eDistanz1 = werte[6];
-        rasp2 = werte[9];
-        eDistanz2 = werte[10];
-        this.northup = northup;
-        eingabewerte = werte;
-        init();
     }
 
     /**
@@ -111,28 +96,9 @@ public class Lage implements Konstanten, Serializable {
     }
 
     /**
-     * Berechnet die Kurslinie zu einem bestimmten Intervall
+     * Passieren der EigenesSchiff
      *
-     * @param intervall
-     *         zwischen zwei Peilungen
-     */
-    public final void berechneKurslinien(float intervall) {
-        // Kurslinie A aus zwei Werten
-        a = new Kurslinie(pos1_a, pos2_a, intervall);
-        // Kurslinie A im Verhaeltnis zur Kurslinie B
-        b0 = new Kurslinie(pos0_b, pos1_b, intervall);
-        // Wahre Kurslinie B
-        b1 = new Kurslinie(pos0_b, pos2_b, intervall);
-        // Relative Kurslinie B nur zwischen den peilungen
-        b2 = new Kurslinie(pos1_b, pos2_b, intervall);
-        // CPA-Linie
-        cpa = new Kurslinie(pos2_a, a.getCPAOrt(b2), intervall);
-    }
-
-    /**
-     * Passieren der Kurslinie
-     *
-     * @return Abstand, in der B die Kurslinie von A passiert
+     * @return Abstand, in der B die EigenesSchiff von A passiert
      */
     public Double getBCR() {
         Punkt2D p = a.getSchnittpunkt(b2);
@@ -144,9 +110,10 @@ public class Lage implements Konstanten, Serializable {
     }
 
     /**
-     * Zeit bis zum passieren der Kurslinie. Ist negativ, wenn die Kurslinie bereits passiert wurde
+     * Zeit bis zum passieren der EigenesSchiff. Ist negativ, wenn die EigenesSchiff bereits
+     * passiert wurde
      *
-     * @return Dauer bis zum passieren der Kurslinie (in Minuten)
+     * @return Dauer bis zum passieren der EigenesSchiff (in Minuten)
      */
     public float getBCT() {
         Punkt2D p = a.getSchnittpunkt(b2);
@@ -185,6 +152,10 @@ public class Lage implements Konstanten, Serializable {
     public double getEntfernungKurslinie() {
         Punkt2D p = a.getSchnittpunkt(b2);
         return b2.getEntfernung(p);
+    }
+
+    public GegnerSchiff getGegner() {
+        return b1;
     }
 
     /**
@@ -265,10 +236,6 @@ public class Lage implements Konstanten, Serializable {
         return b2.getDauer(p);
     }
 
-    public String getTag() {
-        return tag;
-    }
-
     /**
      * Kurs A
      *
@@ -294,25 +261,6 @@ public class Lage implements Konstanten, Serializable {
      */
     public float getvBr() {
         return b2.getGeschwindigkeitRounded();
-    }
-
-    /**
-     * Initialisiert Kurslinien
-     */
-    private void init() {
-        // wahre Position a bei erster Peilung
-        pos1_a = new Punkt2D(
-                (float) (-(eEigFahrt / (60 / eIntervall) * Math.sin(Math.toRadians(eEigKurs)))),
-                (float) (-(eEigFahrt / (60 / eIntervall) * Math.cos(Math.toRadians(eEigKurs)))));
-        // wahre Position a bei zweiter Peilung
-        pos2_a = new Punkt2D(0, 0);
-        // Position b bei erster Peilung
-        pos0_b = pos1_a.mitWinkel(eDistanz1, rasp1);
-        // wahre Position b bei erster Peilung
-        pos1_b = pos2_a.mitWinkel(eDistanz1, rasp1);
-        // Position b bei zweiter Peilung
-        pos2_b = pos2_a.mitWinkel(eDistanz2, rasp2);
-        berechneKurslinien(eIntervall);
     }
 
     /**
@@ -390,9 +338,5 @@ public class Lage implements Konstanten, Serializable {
         // vorlicher ab.
         // Bei einer Beschleunigung knicken sie so ab, dass sie achterlicher
         // erscheinen
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
     }
 }

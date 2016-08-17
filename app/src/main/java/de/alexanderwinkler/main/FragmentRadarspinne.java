@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import de.alexanderwinkler.Math.Punkt2D;
 import de.alexanderwinkler.R;
-import de.alexanderwinkler.berechnungen.Kurslinie;
+import de.alexanderwinkler.berechnungen.EigenesSchiff;
 import de.alexanderwinkler.views.ViewRadarBasisBild;
 
 /**
@@ -25,7 +25,6 @@ import de.alexanderwinkler.views.ViewRadarBasisBild;
  */
 public class FragmentRadarspinne extends Fragment implements View.OnClickListener {
     private static final String FAHRT = "FAHRT", KURS = "KURS", INTERVALL = "INTERVALL";
-    private Punkt2D aktPositionEigSchiff = new Punkt2D(0, 0);
     private float mFahrt;
     private float mIntervall;
     private float mKurs;
@@ -38,12 +37,12 @@ public class FragmentRadarspinne extends Fragment implements View.OnClickListene
         mFahrt = fahrt;
         mIntervall = intervall;
         float distanz = mFahrt / mIntervall;
-        Punkt2D startPosition = aktPositionEigSchiff.mitWinkel(-distanz, mKurs);
-        Kurslinie eigeneKurslinie = new Kurslinie(startPosition, aktPositionEigSchiff, mIntervall);
+        Punkt2D startPosition = new Punkt2D(0, 0).mitWinkel(-distanz, mKurs);
+        EigenesSchiff eigenesSchiff = new EigenesSchiff(startPosition, mIntervall);
         tvEigKurs.setText(String.valueOf(mKurs));
         tvEigFahrt.setText(String.valueOf(mFahrt));
         tvIntervall.setText(String.valueOf(mIntervall));
-        mRadarSpinne.setEigeneKurslinie(eigeneKurslinie);
+        mRadarSpinne.setEigeneKurslinie(eigenesSchiff);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class FragmentRadarspinne extends Fragment implements View.OnClickListene
         } else {
             // Defaultbelegung: Fahrt 6 Knoten, Kurs 0 Grad, Intervall 6 Minuten
             mFahrt = 12;
-            mKurs = 180;
+            mKurs = 45;
             mIntervall = 6;
         }
         mRadarSpinne = (ViewRadarBasisBild) view.findViewById(R.id.view_radarspinne);

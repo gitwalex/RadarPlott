@@ -102,7 +102,7 @@ public class FragmentErgebnisTexteLage extends Fragment implements Konstanten {
             tvSCPA.setText(Double.toString(rundeWert(lage.getSCPA())));
             // TCPA
             tvTCPA.setText(Double.toString(rundeWert(lage.getTCPA())));
-            // Passieren der Kurslinie
+            // Passieren der EigenesSchiff
             // BCR
             tvBCR.setText(Double.toString(rundeWert(lage.getBCR())));
             // BCT

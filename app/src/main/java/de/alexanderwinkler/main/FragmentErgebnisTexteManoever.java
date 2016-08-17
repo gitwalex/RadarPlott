@@ -168,12 +168,12 @@ public class FragmentErgebnisTexteManoever extends Fragment implements Konstante
             tvnTCPA.setText(Double.toString(rundeWert(manoever.getTCPA())));
             // Entfernung bis CPA
             tvnECPA.setText(Double.toString(rundeWert(manoever.getCPAEntfernung())));
-            // Passieren der Kurslinie
+            // Passieren der EigenesSchiff
             // BCR
             tvnBCR.setText(Double.toString(rundeWert(manoever.getBCR())));
             // BCT
             tvnBCT.setText(Double.toString(rundeWert((manoever.getBCT()))));
-            // Entfernung bis Kurslinie
+            // Entfernung bis EigenesSchiff
             tvnBC.setText(Double.toString(rundeWert(manoever.getEntfernungKurslinie())));
             if (dual_pane) {
                 // KB

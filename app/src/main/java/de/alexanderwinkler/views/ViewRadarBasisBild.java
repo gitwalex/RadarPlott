@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -17,7 +16,8 @@ import java.util.List;
 
 import de.alexanderwinkler.Math.Punkt2D;
 import de.alexanderwinkler.R;
-import de.alexanderwinkler.berechnungen.Kurslinie;
+import de.alexanderwinkler.berechnungen.EigenesSchiff;
+import de.alexanderwinkler.berechnungen.GegnerSchiff;
 import de.alexanderwinkler.berechnungen.Lage;
 import de.alexanderwinkler.interfaces.Konstanten;
 
@@ -31,7 +31,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     private Bitmap kompassrose;
     // haelt den Kontext der View
     private List<Lage> lagelist = new ArrayList<>();
-    private Kurslinie mEigeneKurslinie;
+    private EigenesSchiff mEigenesSchiff;
     private float mHeadUpRotation;
     private ScaleGestureDetector mScaleDetector;
     private boolean northupOrientierung = true;
@@ -46,7 +46,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         paint.setTextSize(40);
         paint.setFakeBoldText(true);
         paint.setAntiAlias(true);
-        paint.setStyle(Style.STROKE);
+        paint.setStyle(Paint.Style.STROKE);
         paint.setColor(colorRadarLinien);
     }
 
@@ -56,6 +56,10 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 
     public ViewRadarBasisBild(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public void addLage(Lage lage) {
+        lagelist.add(lage);
     }
 
     @Override
@@ -104,12 +108,17 @@ public class ViewRadarBasisBild extends View implements Konstanten {
             }
             canvas.rotate(2);
         }
-        canvas.restore();
-        if (mEigeneKurslinie != null) {
-            //            mEigeneKurslinie.drawStartPath(canvas, scale, northupOrientierung);
-            //            mEigeneKurslinie.drawDestPath(canvas, scale, northupOrientierung);
-            mEigeneKurslinie.drawPosition(canvas, scale, northupOrientierung);
+        if (mEigenesSchiff != null) {
+            //            mEigenesSchiff.drawStartPath(canvas, scale, northupOrientierung);
+            mEigenesSchiff.drawKurslinie(canvas, scale);
+            mEigenesSchiff.drawPosition(canvas);
         }
+        for (Lage lage : lagelist) {
+            GegnerSchiff gegner = lage.getGegner();
+            gegner.drawKurslinie(canvas, scale);
+            gegner.drawPosition(canvas);
+        }
+        canvas.restore();
     }
 
     @Override
@@ -128,11 +137,11 @@ public class ViewRadarBasisBild extends View implements Konstanten {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (MotionEvent.ACTION_DOWN == event.getAction()) {
-            if (mEigeneKurslinie != null) {
+            if (mEigenesSchiff != null) {
                 float x = event.getX();
                 float y = event.getY();
                 Punkt2D pos = new Punkt2D(x, y);
-                if (mEigeneKurslinie.isPunktAufKurslinie(pos)) {
+                if (mEigenesSchiff.isPunktAufKurslinie(pos)) {
                     invalidate();
                     return true;
                 }
@@ -141,9 +150,9 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         return mScaleDetector.onTouchEvent(event);
     }
 
-    public void setEigeneKurslinie(Kurslinie kurslinie) {
-        this.mEigeneKurslinie = kurslinie;
-        mHeadUpRotation = -mEigeneKurslinie.getWinkelRW();
+    public void setEigeneKurslinie(EigenesSchiff mEigenesSchiff) {
+        this.mEigenesSchiff = mEigenesSchiff;
+        mHeadUpRotation = -this.mEigenesSchiff.getWinkelRW();
         invalidate();
     }
 
@@ -157,6 +166,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             scale *= detector.getScaleFactor();
+            scale = Math.max(Math.min(getWidth() / 2, getHeight() / 2), scale);
             invalidate();
             return true;
         }

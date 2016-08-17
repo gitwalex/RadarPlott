@@ -13,7 +13,7 @@ public class Manoever extends Lage {
      *
      */
     private static final long serialVersionUID = 1L;
-    public final Kurslinie b3;
+    public final EigenesSchiff b3;
     /**
      *
      */
@@ -24,7 +24,7 @@ public class Manoever extends Lage {
      *
      * @param lage
      *         Urspruengliche Lage
-     * @param eigKurs
+     * @param neuerkurs
      *         Neuer Kurs von A
      * @param manoeverminuten
      *         Zeitpunkt des Manoevers in Minuten
@@ -59,7 +59,7 @@ public class Manoever extends Lage {
         rasp1 = pos1_a.getPeilung(pos0_b);
         pos1_b = pos2_a.mitWinkel(eDistanz1, rasp1);
         berechneKurslinien(eIntervall);
-        b3 = new Kurslinie(lage.b2.getAktPosition(), b2.getRichtungsvektor(), lage.eEigFahrt);
+        b3 = new EigenesSchiff(lage.b2.getAktPosition(), b2.getRichtungsvektor(), lage.eEigFahrt);
         oldLage = lage;
     }
 

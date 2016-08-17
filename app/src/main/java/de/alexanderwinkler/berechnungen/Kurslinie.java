@@ -1,9 +1,5 @@
 package de.alexanderwinkler.berechnungen;
 
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.os.Parcel;
 import android.util.Log;
 
@@ -12,44 +8,16 @@ import de.alexanderwinkler.Math.Kreis2D;
 import de.alexanderwinkler.Math.Punkt2D;
 import de.alexanderwinkler.Math.Vektor2D;
 import de.alexanderwinkler.interfaces.Konstanten;
-import de.alexanderwinkler.views.ViewRadarBasisBild;
 
 /**
- * Die Klasse Kurslinie bietet Funktionen zum ermitteln von bestimmten Daten der Bewegung eines
+ * Die Klasse EigenesSchiff bietet Funktionen zum ermitteln von bestimmten Daten der Bewegung eines
  * Schiffes.
  *
  * @author Alexander Winkler
  */
-public class Kurslinie extends Gerade2D implements Konstanten {
-    /**
-     *
-     */
-    public static final Creator<Kurslinie> CREATOR = new Creator<Kurslinie>() {
-        @Override
-        public Kurslinie createFromParcel(Parcel source) {
-            return new Kurslinie(source);
-        }
-
-        @Override
-        public Kurslinie[] newArray(int size) {
-            return new Kurslinie[size];
-        }
-    };
+public abstract class Kurslinie extends Gerade2D implements Konstanten {
     /* Startposition, aktuelle Position */
-    private static final String LOGTAG = "de.alexanderwinkler";
-    private static final Paint dottedLine;
-    private static final Paint normalLine = new Paint();
-
-    static {
-        normalLine.setStrokeWidth(zeichnelagenormal);
-        normalLine.setAntiAlias(true);
-        normalLine.setStyle(Paint.Style.STROKE);
-        normalLine.setColor(colorA);
-        normalLine.setStrokeWidth(zeichnelagefett);
-        dottedLine = new Paint(normalLine);
-        dottedLine.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-    }
-
+    protected static final String LOGTAG = "de.alexanderwinkler";
     /**
      *
      */
@@ -74,27 +42,14 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      *
      */
     protected final float intervall;
-    private final Path startpath = new Path();
-    private final Path destpath = new Path();
-    private final Path positionPath = new Path();
     /**
      *
      *
      */
-    private final Vektor2D richtungsvektor;
-    private float aktPosX;
-    private float aktPosY;
-    /***
-     * Varieblen fuer Scalierung
-     */
-    private float mLastScale;
-    private float nextPosX;
-    private float nextPosY;
-    private float startPosX;
-    private float startPosY;
+    protected final Vektor2D richtungsvektor;
 
     /**
-     * Erstellt eine Kurslinie anhand zweier (Peil-)Punkte in einem bestimmten Intervall
+     * Erstellt eine EigenesSchiff anhand zweier (Peil-)Punkte in einem bestimmten Intervall
      *
      * @param von
      *         Standort zum Zeitpunkt x
@@ -115,7 +70,8 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Erstellt eine Kurslinie anhand eines Punktes, des Richtungsvektors und der Geschwindigkeit.
+     * Erstellt eine EigenesSchiff anhand eines Punktes, des Richtungsvektors und der
+     * Geschwindigkeit.
      *
      * @param von
      *         Standort zum Zeitpunkt x
@@ -156,53 +112,6 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return 0;
     }
 
-    public void drawDestPath(Canvas canvas, float scale, boolean northUp) {
-        canvas.save();
-        destpath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        canvas.translate(canvas.getWidth() / 2 + aktPosX, canvas.getHeight() / 2 - aktPosY);
-        if (!northUp) {
-            canvas.rotate(-getWinkelRW());
-        }
-        destpath.moveTo(0, 0);
-        destpath.lineTo(nextPosX - aktPosX, -nextPosY - aktPosY);
-        canvas.drawPath(destpath, normalLine);
-        canvas.restore();
-    }
-
-    public void drawPosition(Canvas canvas, float scale, boolean northUp) {
-        canvas.save();
-        positionPath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
-        if (!northUp) {
-            canvas.rotate(-getWinkelRW());
-        }
-        positionPath.addCircle(aktPosX, aktPosY, 40f, Path.Direction.CW);
-        canvas.drawPath(positionPath, normalLine);
-        canvas.restore();
-    }
-
-    public void drawStartPath(Canvas canvas, float scale, boolean northUp) {
-        canvas.save();
-        startpath.reset();
-        if (mLastScale != scale) {
-            initScale(scale);
-        }
-        canvas.translate(canvas.getWidth() / 2 + aktPosX, canvas.getHeight() / 2 - aktPosY);
-        if (!northUp) {
-            canvas.rotate(-getWinkelRW());
-        }
-        startpath.moveTo(0, 0);
-        startpath.lineTo(startPosX - aktPosX, -startPosY - aktPosX);
-        canvas.drawPath(startpath, dottedLine);
-        canvas.restore();
-    }
-
     /**
      * Aktueller Standort
      *
@@ -213,20 +122,20 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Ermittelt den CPA einer Kurslinie zu einer anderen
+     * Ermittelt den CPA einer EigenesSchiff zu einer anderen
      *
      * @param k
-     *         Kurslinie, zu der der CPA ermittelt
+     *         EigenesSchiff, zu der der CPA ermittelt
      *
      * @return CPA
      */
     public Punkt2D getCPAOrt(Kurslinie k) {
-        // Normalenvektor der uebergebenen Kurslinie ermitteln
+        // Normalenvektor der uebergebenen EigenesSchiff ermitteln
         Vektor2D v = k.getNormalenvektor();
         // Gerade durch den Nullpunkt mit Normalenvektor legen
         Gerade2D g = new Gerade2D(new Punkt2D(0, 0), v);
         // Schnittpunkt zwischen der neuen Geraden und der uebergebenen
-        // Kurslinie ist der CPA
+        // EigenesSchiff ist der CPA
         return k.getSchnittpunkt(g);
     }
 
@@ -235,17 +144,17 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * Fahrtrichtung liegt (= Punkt wurde bereits passiert).
      *
      * @param p
-     *         Punkt auf der Kurslinie
+     *         Punkt auf der EigenesSchiff
      *
      * @return Dauer bis zum Erreichen des Punktes in Minuten
      *
      * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     *         (), wenn der Punkt nicht auf der EigenesSchiff liegt.
      */
     public float getDauer(Punkt2D p) {
         if (!isPunktAufGerade(p)) {
-            Log.d(LOGTAG, "Fehler bei Kurslinie.getDauer(Punkt p), Parameter: " + p.toString());
-            throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
+            Log.d(LOGTAG, "Fehler bei EigenesSchiff.getDauer(Punkt p), Parameter: " + p.toString());
+            throw new IllegalArgumentException("Punkt liegt nicht auf EigenesSchiff");
         }
         // Punkt liegt auf Geraden: Abstand berechnen
         float abstand = aktPosition.abstand(p);
@@ -264,19 +173,19 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * Absolute (damit immer positiv) Entfernung zu einem Punkt.
      *
      * @param punktaufkurslinie
-     *         Punkt, der auf der Kurslinie liegt.
+     *         Punkt, der auf der EigenesSchiff liegt.
      *
      * @return Entfernung in Seemeilen
      *
      * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     *         (), wenn der Punkt nicht auf der EigenesSchiff liegt.
      */
     public double getEntfernung(Punkt2D punktaufkurslinie) {
         if (!isPunktAufGerade(punktaufkurslinie)) {
             Log.d(LOGTAG,
-                    "Fehler bei Kurslinie.getEntfernung(Punkt p), Parameter: " + punktaufkurslinie
+                    "Fehler bei EigenesSchiff.getEntfernung(Punkt p), Parameter: " + punktaufkurslinie
                             .toString());
-            throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
+            throw new IllegalArgumentException("Punkt liegt nicht auf EigenesSchiff");
         }
         double lambda;
         // Punkt liegt auf der Geraden. Berechnen, wie gross die Entfernung ist
@@ -291,7 +200,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Geschwindigkeit auf der Kurslinie
+     * Geschwindigkeit auf der EigenesSchiff
      *
      * @return Geschwindigkeit in Knoten
      */
@@ -300,7 +209,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Geschwindigkeit auf der Kurslinie
+     * Geschwindigkeit auf der EigenesSchiff
      *
      * @return Geschwindigkeit in Knoten
      */
@@ -322,21 +231,21 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * uebergebenen Punkt liegt
      *
      * @param p
-     *         Punkt auf der Kurslinie
+     *         Punkt auf der EigenesSchiff
      * @param d
      *         Entfernung zum uebergebenen Punkt
      *
      * @return Punkt, der in Entfernung d zum uebergebenen Punkt liegt
      *
      * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     *         (), wenn der Punkt nicht auf der EigenesSchiff liegt.
      */
     public Punkt2D getPunktinFahrtrichtung(Punkt2D p, float d) {
         if (!isPunktAufKurslinie(p)) {
             Log.d(LOGTAG,
-                    "Fehler bei Kurslinie.getPunktinFahrtRichtung(Punkt p, double d), Parameter: " + p
+                    "Fehler bei EigenesSchiff.getPunktinFahrtRichtung(Punkt p, double d), Parameter: " + p
                             .toString() + " / " + d);
-            throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
+            throw new IllegalArgumentException("Punkt liegt nicht auf EigenesSchiff");
         }
         Vektor2D v = super.getRichtungsvektor().getEinheitsvektor();
         float x = p.getX() + d * v.getEndpunkt().getX();
@@ -354,7 +263,7 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * @return Punkt, der im Abstand d zum Nullpunkt liegt
      *
      * @throws IllegalArgumentException
-     *         (), wenn kein Punkt im entsprechenden Abstand auf der Kurslinie liegt
+     *         (), wenn kein Punkt im entsprechenden Abstand auf der EigenesSchiff liegt
      */
     public Punkt2D getPunktinFahrtrichtungmitAbstand(float abstand) {
         Kreis2D k = new Kreis2D(new Punkt2D(0, 0), abstand);
@@ -367,9 +276,9 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         }
         if (s[0] == null & s[1] == null) {
             Log.d(LOGTAG,
-                    "Fehler bei Kurslinie.getPunktinFahrtrichtungmitAbstand(double abstand), Parameter: " + abstand);
+                    "Fehler bei EigenesSchiff.getPunktinFahrtrichtungmitAbstand(double abstand), Parameter: " + abstand);
             throw new IllegalArgumentException(
-                    "Kein Punkt in entsprechendem Abstand in Fahrtrichtung auf der Kurslinie");
+                    "Kein Punkt in entsprechendem Abstand in Fahrtrichtung auf der EigenesSchiff");
         }
         Punkt2D erg = s[0];
         if (getEntfernung(s[0]) > getEntfernung(s[1])) {
@@ -383,21 +292,21 @@ public class Kurslinie extends Gerade2D implements Konstanten {
      * Minuten erreicht wird.
      *
      * @param p
-     *         Punkt auf der Kurslinie
+     *         Punkt auf der EigenesSchiff
      * @param minuten
      *         Dauer vom uebergebenen Punkt
      *
      * @return Punkt, der in Dauer erreicht ist.
      *
      * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     *         (), wenn der Punkt nicht auf der EigenesSchiff liegt.
      */
     public Punkt2D getPunktinFahrtrichtungnachDauer(Punkt2D p, float minuten) {
         if (!isPunktAufKurslinie(p)) {
             Log.d(LOGTAG,
-                    "Fehler bei Kurslinie.getPunktinFahrtrichtungnachDauer(Punkt p, double minuten)" + ", Parameter: " + p
+                    "Fehler bei EigenesSchiff.getPunktinFahrtrichtungnachDauer(Punkt p, double minuten)" + ", Parameter: " + p
                             .toString() + " / " + minuten);
-            throw new IllegalArgumentException("Punkt liegt nicht auf Kurslinie");
+            throw new IllegalArgumentException("Punkt liegt nicht auf EigenesSchiff");
         }
         float x = p.getX();
         float y = p.getY();
@@ -407,21 +316,21 @@ public class Kurslinie extends Gerade2D implements Konstanten {
     }
 
     /**
-     * Liefert die Seitenpeilung eines Punktes zur Kurslinie
+     * Liefert die Seitenpeilung eines Punktes zur EigenesSchiff
      *
      * @param p
-     *         Punkt, der nicht auf der Kurslinie liegt
+     *         Punkt, der nicht auf der EigenesSchiff liegt
      *
      * @return Seitenpeilung in Grad (Degrees)
      *
      * @throws IllegalArgumentException
-     *         (), wenn der Punkt nicht auf der Kurslinie liegt.
+     *         (), wenn der Punkt nicht auf der EigenesSchiff liegt.
      */
     public double getSeitenpeilung(Punkt2D p) {
         if (!isPunktAufKurslinie(p)) {
-            Log.d(LOGTAG,
-                    "Fehler bei Kurslinie.getSeitenpeilung(Punkt p), Parameter: " + p.toString());
-            throw new IllegalArgumentException("Punkt liegt auf Kurslinie");
+            Log.d(LOGTAG, "Fehler bei EigenesSchiff.getSeitenpeilung(Punkt p), Parameter: " + p
+                    .toString());
+            throw new IllegalArgumentException("Punkt liegt auf EigenesSchiff");
         }
         Vektor2D v = new Vektor2D(getLotpunkt(p));
         return v.getWinkelRechtweisendNord();
@@ -479,26 +388,13 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         return rundeWert(winkel);
     }
 
-    private void initScale(float scale) {
-        mLastScale = scale;
-        float mScale = scale / ViewRadarBasisBild.RADARRINGE;
-        aktPosX = aktPosition.getX() * mScale;
-        aktPosY = aktPosition.getY() * mScale;
-        startPosX = startPosition.getX() * mScale;
-        startPosY = startPosition.getY() * mScale;
-        nextPosX = aktPosition.getX() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                .getX()) * scale;
-        nextPosY = aktPosition.getY() + (richtungsvektor.getEinheitsvektor().getEndpunkt()
-                .getY() * scale);
-    }
-
     /**
-     * Prueft, ob ein Punkt auf der Kurslinie liegt. Toleranz ist 1E6.
+     * Prueft, ob ein Punkt auf der EigenesSchiff liegt. Toleranz ist 1E6.
      *
      * @param p
      *         Punkt
      *
-     * @return true, wenn der Punkt auf der Kurslinie liegt, ansonsten false.
+     * @return true, wenn der Punkt auf der EigenesSchiff liegt, ansonsten false.
      */
     public boolean isPunktAufKurslinie(Punkt2D p) {
         if (p == null) {
@@ -561,10 +457,10 @@ public class Kurslinie extends Gerade2D implements Konstanten {
         super.writeToParcel(dest, flags);
         dest.writeParcelable(this.aktPosition, flags);
         dest.writeParcelable(this.startPosition, flags);
-        dest.writeDouble(this.winkel);
-        dest.writeDouble(this.weglaenge);
-        dest.writeDouble(this.geschwindigkeit);
-        dest.writeDouble(this.intervall);
+        dest.writeFloat(this.winkel);
+        dest.writeFloat(this.weglaenge);
+        dest.writeFloat(this.geschwindigkeit);
+        dest.writeFloat(this.intervall);
         dest.writeParcelable(this.richtungsvektor, flags);
     }
 }

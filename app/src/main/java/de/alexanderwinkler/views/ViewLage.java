@@ -11,8 +11,8 @@ public class ViewLage extends View implements Konstanten {
     //	// protected int rastergroesse;
     //	protected boolean isInitialized;
     //	protected volatile boolean isInvalid = true;
-    //	protected ArrayList<Kurslinie.Draw> lagekurslinie = new ArrayList<Kurslinie.Draw>();
-    //	protected ArrayList<Kurslinie.Draw> manoeverkurslinie = new ArrayList<Kurslinie.Draw>();
+    //	protected ArrayList<EigenesSchiff.Draw> lagekurslinie = new ArrayList<EigenesSchiff.Draw>();
+    //	protected ArrayList<EigenesSchiff.Draw> manoeverkurslinie = new ArrayList<EigenesSchiff.Draw>();
     //	protected Paint paint = new Paint(), manoeverpaint;
     protected Lage lage;
     //	protected Bundle lagebundle;
@@ -112,11 +112,11 @@ public class ViewLage extends View implements Konstanten {
     //			if (!northupOrientierung) {
     //				canvas.rotate(360 - lage.getKAa());
     //			}
-    //			for (Kurslinie.Draw k : lagekurslinie) {
+    //			for (EigenesSchiff.Draw k : lagekurslinie) {
     //				k.onDrawLine(canvas);
     //			}
     //			if (!manoeverkurslinie.isEmpty()) {
-    //				for (Kurslinie.Draw k : manoeverkurslinie) {
+    //				for (EigenesSchiff.Draw k : manoeverkurslinie) {
     //					k.onDrawLine(canvas);
     //				}
     //			}
