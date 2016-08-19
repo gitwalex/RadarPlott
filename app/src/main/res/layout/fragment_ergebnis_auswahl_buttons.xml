@@ -11,14 +11,14 @@
         android:orientation="horizontal" >
         <fragment
             android:id="@+id/npmanoeverZeit"
-            android:name="de.alexanderwinkler.main.FragmentNumberPicker"
+            android:name="de.aw.radarplott.main.FragmentNumberPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             tools:layout="@layout/fragment_numberpicker_single" />
         <fragment
             android:id="@+id/npmanoeverAbstand"
-            android:name="de.alexanderwinkler.main.FragmentNumberPicker"
+            android:name="de.aw.radarplott.main.FragmentNumberPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,7 +51,7 @@
         android:orientation="horizontal" >
         <fragment
             android:id="@+id/npmanoeverCPA"
-            android:name="de.alexanderwinkler.main.FragmentNumberPicker"
+            android:name="de.aw.radarplott.main.FragmentNumberPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,13 +63,13 @@
             android:orientation="vertical" >
             <fragment
                 android:id="@+id/npmanoeverFahrt"
-                android:name="de.alexanderwinkler.main.FragmentNumberPicker"
+                android:name="de.aw.radarplott.main.FragmentNumberPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_numberpicker_single" />
             <fragment
                 android:id="@+id/npmanoeverKurs"
-                android:name="de.alexanderwinkler.main.FragmentNumberPicker"
+                android:name="de.aw.radarplott.main.FragmentNumberPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_numberpicker_single" />

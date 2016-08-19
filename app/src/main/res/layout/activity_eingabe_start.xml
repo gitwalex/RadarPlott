@@ -9,13 +9,13 @@
         android:orientation="vertical" >
         <fragment
             android:id="@+id/fragmentEingabeSchiff"
-            android:name="de.alexanderwinkler.main.FragmentEingabeEigSchiff"
+            android:name="de.aw.radarplott.main.FragmentEingabeEigSchiff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_eingabe_eigdaten" />
         <fragment
             android:id="@+id/extendedTabHost"
-            android:name="de.alexanderwinkler.div.SimpleTabHost"
+            android:name="de.aw.radarplott.div.SimpleTabHost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_eingabe_tabhost" />
