@@ -42,7 +42,7 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
     /**
      *
      */
-    private double fahrt, manoeverminuten, manoeverkurs;
+    private float fahrt, manoeverminuten, manoeverkurs;
     private SimpleTabHost fth;
     private ArrayList<Lage> lageListe = new ArrayList<Lage>();
     /**
@@ -105,7 +105,7 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
     }
 
 	/*
-	 * (non-Javadoc)
+     * (non-Javadoc)
 	 * 
 	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
 	 */
@@ -116,7 +116,7 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
     }
 
 	/*
-	 * (non-Javadoc)
+     * (non-Javadoc)
 	 * 
 	 * @see android.support.v4.app.FragmentActivity#onStart()
 	 */
@@ -187,15 +187,15 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
         if (saveStateInstance != null) {
             lagebundle = saveStateInstance.getBundle(KEYBUNDLE);
             numberOfTabs = saveStateInstance.getInt(KEYNUMBEROFTABS);
-            manoeverkurs = lagebundle.getDouble(KEYMANOEVERKURSA);
-            manoeverminuten = lagebundle.getDouble(KEYMANOEVERMINUTEN);
+            manoeverkurs = lagebundle.getFloat(KEYMANOEVERKURSA);
+            manoeverminuten = lagebundle.getFloat(KEYMANOEVERMINUTEN);
             dual_pane = lagebundle.getBoolean(KEYDUALPANE);
         } else {// saveStateInstance == null --> erster Start
             lagebundle = getIntent().getExtras().getBundle(KEYBUNDLE);
             // Aufbau des lagebundle
-            manoeverkurs = lagebundle.getDouble(KEYMANOEVERKURSA);
-            lagebundle.putDouble(KEYMANOEVERKURSA, manoeverkurs);
-            lagebundle.putDouble(KEYMANOEVERMINUTEN, manoeverminuten);
+            manoeverkurs = lagebundle.getFloat(KEYMANOEVERKURSA);
+            lagebundle.putFloat(KEYMANOEVERKURSA, manoeverkurs);
+            lagebundle.putFloat(KEYMANOEVERMINUTEN, manoeverminuten);
             numberOfTabs = single_pane_numberOfTabs;
             lagebundle.putBoolean(KEYDUALPANE, dual_pane);
         } // End: saveStateInstance != null
@@ -226,7 +226,7 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
      * @param newVal
      */
     @Override
-    public void onLageChange(int senderId, double newVal) {
+    public void onLageChange(int senderId, float newVal) {
         String tag;
         manoeverListe.clear();
         switch (senderId) {
@@ -236,13 +236,13 @@ public class ActivityRadarPlottErgebnis extends FragmentActivity
             case R.id.npmanoeverZeit:
             case R.id.npmanoeverAbstand:
                 manoeverminuten = newVal;
-                lagebundle.putDouble(KEYMANOEVERMINUTEN, manoeverminuten);
+                lagebundle.putFloat(KEYMANOEVERMINUTEN, manoeverminuten);
                 break;
             case R.id.npmanoeverKurs:
             case R.id.npmanoeverCPA:
             case SENDEROnTouch:
                 manoeverkurs = newVal;
-                lagebundle.putDouble(KEYMANOEVERKURSA, manoeverkurs);
+                lagebundle.putFloat(KEYMANOEVERKURSA, manoeverkurs);
             case INIT:
                 break;
             default:

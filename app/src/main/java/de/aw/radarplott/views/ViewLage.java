@@ -98,7 +98,7 @@ public class ViewLage extends View implements Konstanten {
 			manoeverpaint.setPathEffect(new DashPathEffect(new float[] {
 					0.25f * scale, 0.2f * scale }, 0));
 			manoeverkurslinie.clear();
-			Punkt2D p = manoever.b2.getAp();
+			Punkt2D p = manoever.b2.getAktuellerStandort();
 			positionmanoever = new Punkt2D(p.getX() * scale, p.getY() * scale);
 			manoeverpaint.setColor(colorA);
 			manoeverkurslinie.add(manoever.a.new Draw(manoeverpaint,

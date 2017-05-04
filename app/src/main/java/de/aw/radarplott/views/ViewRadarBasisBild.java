@@ -126,7 +126,7 @@ public class ViewRadarBasisBild extends View implements Konstanten {
 			// Zeichnen der Sektoren
 			for (int winkel = 0; winkel < 360; winkel += 2) {
 				// Berechnen der Linien - Abstand 2 Grad
-				hp = mp.mitWinkel(rastergroesse * scale, winkel);
+				hp = mp.getPunkt(rastergroesse * scale, winkel);
 				// Berechnen der Linien - Abstand 30 Grad, Linie ab Nullpunkt
 				if (winkel % 30 == 0) {
 					p.moveTo(0, 0);

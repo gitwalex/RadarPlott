@@ -1,184 +1,120 @@
 package de.aw.radarplott.Math;
 
-import java.io.Serializable;
-
 /**
- * 
  * Die Klasse Point2D beschreibt einen Punkt in einem zwei-dimensionalen
  * Koordinatensystem
- * 
  */
-public class Punkt2D implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private double x;
-	private double y;
-	
-	/**
-	 * Erstellt einen Punkt im Nullpunkt eines 2D-Koordinatensystems
-	 */
-	public Punkt2D() {
-		/*
-		 * Nullpunkt
-		 */
-		this(0d, 0d);
-	}
-	
-	/**
-	 * Konstruktor, der einen Punkt in einem Koordinatensystem erstellt.
-	 * 
-	 * @param x
-	 *            Punkt auf der X-Achse
-	 * @param y
-	 *            Punkt auf der Y-Achse
-	 */
-	public Punkt2D(double x, double y) {
-		/*
-		 * Legt einen Punkt mit den Koordinaten (x , y) an
-		 */
-		this.setX(x);
-		this.setY(y);
-	}
-	
-	/**
-	 * Konstruktor, der einen Punkt in einem Koordinatensystem erstellt.
-	 * 
-	 * @param p
-	 *            Point2D
-	 */
-	public Punkt2D(Punkt2D p) {
-		/*
-		 * Legt einen Punkt mit den Koordinaten (x , y) an
-		 */
-		setX(p.getX());
-		setY(p.getY());
-	}
-	
-	/**
-	 * Liefert den Abstand eines uebergebenen Punktes zum Punkt zurueck
-	 * 
-	 * @param p
-	 *            Punkt, zu dem der Abstand berechnet werden soll
-	 * @return Abstand der beiden Punkte
-	 */
-	public final double abstand(Punkt2D p) {
-		/*
-		 * Anwendung Satz des Phytagoras
-		 */
-		double a = (p.x - x) * (p.x - x);
-		double b = (p.y - y) * (p.y - y);
-		return Math.sqrt(a + b);
-	}
+public class Punkt2D {
+    private final float x;
+    private final float y;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Punkt2D other = (Punkt2D) obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
-			return false;
-		}
-		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
-	}
-
-	public double getPeilung(Punkt2D p) {
-		Vektor2D v = new Vektor2D(this, p);
-		return v.getWinkelRechtweisendNord();
-	}
-	
-	/**
-	 * X-Koordinate des Punktes
-	 *
-	 * @return X-Koordinate des Punktes
-	 */
-	public final double getX() {
-		return x;
-	}
-	
-	/**
-	 * Y-Koordinate des Punktes
-	 *
-	 * @return Y-Koordinate des Punktes
-	 */
-	public final double getY() {
-		return y;
-	}
-
-	/*
-	 * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
+    /**
+     * Erstellt einen Punkt im Nullpunkt eines 2D-Koordinatensystems
      */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(y);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
-	
-	/**
-	 * Gibt einen Punkt zurueck, der in einem bestimmten Abstand (distanz) und
-	 * einem bestimmten Winkel (winkel) zum aktuellen Punkt liegt.
-	 *
-	 * @param distanz
-	 *            Distanz des neuen Punktes zum aktuellen Punkt
-	 * @param winkel
-	 *            Winkel in Radiant, zu dem sich der neuen Punkt zum aktuellen
-	 *            Punkt liegt
-	 * @return neuer Punkt
-	 */
-	public final Punkt2D mitWinkel(double distanz, double winkel) {
-		return new Punkt2D(x + distanz * Math.sin(Math.toRadians(winkel)),
-				y + distanz * Math.cos(Math.toRadians(winkel)));
-	}
-
-	/**
-	 * Aendert die X-Koordinate des Punktes
-	 *
-	 * @param x
-	 *            neue X-Koordinate des Punktes
-	 */
-    private void setX(double x) {
-        this.x = x;
+    public Punkt2D() {
+        this(0, 0);
     }
 
-	/**
-	 * Aendert die Y-Koordinate des Punktes
+    /**
+     * Konstruktor, der einen Punkt in einem Koordinatensystem erstellt.
      *
+     * @param x
+     *         Punkt auf der X-Achse
      * @param y
-     *            neue Y-Koordinate des Punktes
+     *         Punkt auf der Y-Achse
      */
-    private void setY(double y) {
+    public Punkt2D(float x, float y) {
+        this.x = x;
         this.y = y;
     }
-	
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
+
+    /**
+     * Konstruktor, der einen Punkt in einem Koordinatensystem erstellt.
+     *
+     * @param p
+     *         Point2D
+     */
+    public Punkt2D(Punkt2D p) {
+        this(p.getX(), p.getY());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Punkt2D punkt2D = (Punkt2D) o;
+        if (Float.compare(punkt2D.x, x) != 0) return false;
+        return Float.compare(punkt2D.y, y) == 0;
+    }
+
+    /**
+     * Liefert den Abstand eines uebergebenen Punktes zum Punkt zurueck
+     * Anwendung Satz des Phytagoras
+     *
+     * @param p
+     *         Punkt, zu dem der Abstand berechnet werden soll
+     *
+     * @return Abstand der beiden Punkte
+     */
+    public final float getDistance(Punkt2D p) {
+        float a = (p.x - x) * (p.x - x);
+        float b = (p.y - y) * (p.y - y);
+        return (float) Math.sqrt(a + b);
+    }
+
+    public float getPeilung(Punkt2D p) {
+        Vektor2D v = new Vektor2D(this, p);
+        return v.getWinkelRechtweisendNord();
+    }
+
+    /**
+     * Gibt einen Punkt zurueck, der in einem bestimmten Abstand (distanz) und
+     * einem bestimmten Winkel (winkel) zum aktuellen Punkt liegt.
+     *
+     * @param distanz
+     *         Distanz des neuen Punktes zum aktuellen Punkt
+     * @param winkel
+     *         Winkel in Radiant, zu dem sich der neuen Punkt zum aktuellen Punkt liegt
+     *
+     * @return neuer Punkt
+     */
+    public final Punkt2D getPunkt(float distanz, float winkel) {
+        return new Punkt2D(x + distanz * (float) Math.sin(Math.toRadians(winkel)),
+                y + distanz * (float) Math.cos(Math.toRadians(winkel)));
+    }
+
+    /**
+     * X-Koordinate des Punktes
+     *
+     * @return X-Koordinate des Punktes
+     */
+    public final float getX() {
+        return x;
+    }
+
+    /**
+     * Y-Koordinate des Punktes
+     *
+     * @return Y-Koordinate des Punktes
+     */
+    public final float getY() {
+        return y;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
+        result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
         return "(" + Math.round(x * 1E6) / 1E6 + ", " + Math.round(y * 1E6)
                 / 1E6 + ")";
     }
